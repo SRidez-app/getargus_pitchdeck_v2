@@ -49,9 +49,14 @@ const TimelineSlide: React.FC<TimelineSlideProps> = ({ onNext, onPrevious }) => 
     },
     {
       quarter: 'Q4 2025',
-      title: 'Momentum & Traction',
-      emotion: 'Market Validation & Growth',
-      story: "Marketing started September 15th. DOTs/ITS partnerships: MDOT, NDOT, FDOT. Mobility integrations: Werner, DoorDash, Bringg.com, Sygic.",
+title: 'Momentum & Traction',
+emotion: 'Market Validation & Growth',
+story: `
+- Marketing campaign launched September 15th
+- Secured partnerships with MDOT, NDOT, and FDOT
+- Integrated with Werner, DoorDash, Bringg.com, and Sygic
+- Established presence in both government (DOT/ITS) and commercial mobility sectors
+`,
       icon: <Target size={40} color="#FFCA2B" strokeWidth={2.5} />,
       milestones: [
         '15 PI Firms Joined - 200 searches',
