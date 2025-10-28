@@ -1,0 +1,13 @@
+'use client';
+
+import TitleSlide from '../Slides/Title';
+import { useSlideNavigation } from '@/app/Components/SlideNavigation';
+
+export default function TitlePage() {
+  const { onNext, onPrevious } = useSlideNavigation({
+    nextSlide: '/problem',
+    previousSlide: null,
+  });
+
+  return <TitleSlide onNext={onNext} onPrevious={onPrevious} />;
+}
