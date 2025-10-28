@@ -48,15 +48,13 @@ const TimelineSlide: React.FC<TimelineSlideProps> = ({ onNext, onPrevious }) => 
       borderColor: 'rgba(255, 202, 43, 0.4)',
     },
     {
-      quarter: 'Q4 2025',
+quarter: 'Q4 2025',
 title: 'Momentum & Traction',
 emotion: 'Market Validation & Growth',
-story: `
-- Marketing campaign launched September 15th
-- Secured partnerships with MDOT, NDOT, and FDOT
-- Integrated with Werner, DoorDash, Bringg.com, and Sygic
-- Established presence in both government (DOT/ITS) and commercial mobility sectors
-`,
+story: `- Launched marketing campaign (Sept 15th)
+- 3 state DOT partnerships secured (MDOT, NDOT, FDOT)
+- 4 major mobility integrations completed (Werner, DoorDash, Bringg.com, Sygic)
+- Dual-track validation: government + commercial sectors`,
       icon: <Target size={40} color="#FFCA2B" strokeWidth={2.5} />,
       milestones: [
         '15 PI Firms Joined - 200 searches',
