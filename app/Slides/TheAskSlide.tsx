@@ -26,32 +26,30 @@ const TheAskSlide: React.FC<TheAskSlideProps> = ({ onNext, onPrevious }) => {
     {
       text: "Execute on pilots in motion. \"Chicken or Egg\""
     },
-    {
-      text: "Scale go-to-market, strategic partnerships, and customer acquisition across mobility and government sectors"
-    },
+   
     {
       text: "Invest in camera networks ahead of our growth to scale."
     }
   ];
 
-  // Coverage timeline data
+  // Coverage timeline data with color coding
+  // Gold (#FFCA2B) = New Coverage
+  // Navy Blue (#14004C) = Existing Coverage
   const coverageData = [
     {
       year: '2025',
-      states: ['GA', 'NV'],
-      mapImage: '/coverage_map_2025.png'
+      newStates: ['GA', 'NV'],
+      existingStates: []
     },
     {
       year: '2026',
-      states: ['GA', 'NV', 'FL', 'NY', 'MI', 'CA', 'NJ', 'TN', 'AL', 'AR', 'MS', 'NE'],
-      mapImage: '/coverage_map_2026.png'
+      newStates: ['FL', 'NY', 'MI', 'CA', 'NJ', 'TN', 'AL', 'AR', 'MS', 'NE'],
+      existingStates: ['GA', 'NV']
     },
     {
       year: '2027',
-      states: ['GA', 'NV', 'FL', 'NY', 'MI', 'CA', 'NJ', 'TN', 'AL', 'AR', 'MS', 'NE', 
-               'MN', 'SC', 'VA', 'MD', 'RI', 'CT', 'VT', 'ME', 'NH', 'PA', 'KY', 'HI', 
-               'WA', 'IL', 'IN', 'WI'],
-      mapImage: '/coverage_map_2027.png'
+      newStates: ['MN', 'SC', 'VA', 'MD', 'RI', 'CT', 'VT', 'ME', 'NH', 'PA', 'KY', 'HI', 'WA', 'IL', 'IN', 'WI'],
+      existingStates: ['GA', 'NV', 'FL', 'NY', 'MI', 'CA', 'NJ', 'TN', 'AL', 'AR', 'MS', 'NE']
     }
   ];
 
@@ -252,7 +250,7 @@ const TheAskSlide: React.FC<TheAskSlideProps> = ({ onNext, onPrevious }) => {
             Geographic Expansion Timeline:
           </h3>
 
-          {/* Maps Grid */}
+          {/* Coverage Cards Grid */}
           <div 
             className="grid grid-cols-1 md:grid-cols-3 w-full"
             style={{
@@ -265,8 +263,8 @@ const TheAskSlide: React.FC<TheAskSlideProps> = ({ onNext, onPrevious }) => {
                 style={{
                   display: 'flex',
                   flexDirection: 'column',
-                  alignItems: 'center',
-                  padding: 'clamp(20px, 2.5vh, 32px)',
+                  alignItems: 'flex-start',
+                  padding: 'clamp(24px, 2.5vh, 36px)',
                   borderRadius: 'clamp(16px, 1.5vw, 20px)',
                   border: '2px solid #A4B3FF',
                   background: 'linear-gradient(107.56deg, #000000 37.5%, #14004C 100%), linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2))',
@@ -278,49 +276,154 @@ const TheAskSlide: React.FC<TheAskSlideProps> = ({ onNext, onPrevious }) => {
                   style={{
                     fontFamily: 'Inter, var(--font-inter)',
                     fontWeight: 600,
-                    fontSize: 'clamp(24px, 2.2vw, 32px)',
+                    fontSize: 'clamp(28px, 2.5vw, 36px)',
                     color: '#FFCA2B',
-                    marginBottom: 'clamp(16px, 2vh, 24px)',
+                    marginBottom: 'clamp(20px, 2.5vh, 28px)',
                   }}
                 >
                   {data.year}
                 </h4>
 
-                {/* Map Image */}
-                <div 
-                  style={{
-                    position: 'relative',
-                    width: '100%',
-                    aspectRatio: '16 / 9',
-                    marginBottom: 'clamp(16px, 2vh, 24px)',
-                    borderRadius: 'clamp(8px, 1vw, 12px)',
-                    overflow: 'hidden',
-                    background: 'rgba(255, 255, 255, 0.05)',
-                  }}
-                >
-                  <Image
-                    src={data.mapImage}
-                    alt={`${data.year} Coverage Map`}
-                    fill
-                    style={{
-                      objectFit: 'contain',
-                    }}
-                  />
-                </div>
+                {/* New Coverage Section */}
+                {data.newStates.length > 0 && (
+                  <div style={{ marginBottom: 'clamp(20px, 2.5vh, 28px)', width: '100%' }}>
+                    <div 
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 'clamp(8px, 1vw, 12px)',
+                        marginBottom: 'clamp(12px, 1.5vh, 16px)',
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: 'clamp(16px, 1.5vw, 20px)',
+                          height: 'clamp(16px, 1.5vw, 20px)',
+                          background: '#FFCA2B',
+                          borderRadius: '3px',
+                          flexShrink: 0,
+                        }}
+                      />
+                      <span
+                        style={{
+                          fontFamily: 'Apercu Pro',
+                          fontWeight: 500,
+                          fontSize: 'clamp(16px, 1.6vw, 20px)',
+                          color: '#FFCA2B',
+                        }}
+                      >
+                        New Coverage
+                      </span>
+                    </div>
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        gap: 'clamp(8px, 1vw, 12px)',
+                      }}
+                    >
+                      {data.newStates.map((state, idx) => (
+                        <span
+                          key={idx}
+                          style={{
+                            fontFamily: 'Apercu Pro',
+                            fontWeight: 500,
+                            fontSize: 'clamp(14px, 1.4vw, 18px)',
+                            color: '#FFCA2B',
+                            padding: 'clamp(4px, 0.5vh, 6px) clamp(10px, 1vw, 14px)',
+                            background: 'rgba(255, 202, 43, 0.15)',
+                            borderRadius: 'clamp(6px, 0.8vw, 8px)',
+                            border: '1px solid #FFCA2B',
+                          }}
+                        >
+                          {state}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
-                {/* State Count */}
-                <p
+                {/* Existing Coverage Section */}
+                {data.existingStates.length > 0 && (
+                  <div style={{ width: '100%' }}>
+                    <div 
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 'clamp(8px, 1vw, 12px)',
+                        marginBottom: 'clamp(12px, 1.5vh, 16px)',
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: 'clamp(16px, 1.5vw, 20px)',
+                          height: 'clamp(16px, 1.5vw, 20px)',
+                          background: '#14004C',
+                          borderRadius: '3px',
+                          border: '1px solid #A4B3FF',
+                          flexShrink: 0,
+                        }}
+                      />
+                      <span
+                        style={{
+                          fontFamily: 'Apercu Pro',
+                          fontWeight: 500,
+                          fontSize: 'clamp(16px, 1.6vw, 20px)',
+                          color: '#A4B3FF',
+                        }}
+                      >
+                        Existing Coverage
+                      </span>
+                    </div>
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        gap: 'clamp(8px, 1vw, 12px)',
+                      }}
+                    >
+                      {data.existingStates.map((state, idx) => (
+                        <span
+                          key={idx}
+                          style={{
+                            fontFamily: 'Apercu Pro',
+                            fontWeight: 500,
+                            fontSize: 'clamp(14px, 1.4vw, 18px)',
+                            color: '#A4B3FF',
+                            padding: 'clamp(4px, 0.5vh, 6px) clamp(10px, 1vw, 14px)',
+                            background: 'rgba(164, 179, 255, 0.15)',
+                            borderRadius: 'clamp(6px, 0.8vw, 8px)',
+                            border: '1px solid #A4B3FF',
+                          }}
+                        >
+                          {state}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Total State Count */}
+                <div
                   style={{
-                    fontFamily: 'Apercu Pro',
-                    fontWeight: 400,
-                    fontSize: 'clamp(14px, 1.4vw, 18px)',
-                    color: '#FFFFFF',
-                    opacity: 0.8,
-                    textAlign: 'center',
+                    width: '100%',
+                    marginTop: 'clamp(20px, 2.5vh, 28px)',
+                    paddingTop: 'clamp(16px, 2vh, 20px)',
+                    borderTop: '1px solid rgba(164, 179, 255, 0.3)',
                   }}
                 >
-                  {data.states.length} States
-                </p>
+                  <p
+                    style={{
+                      fontFamily: 'Inter, var(--font-inter)',
+                      fontWeight: 600,
+                      fontSize: 'clamp(16px, 1.6vw, 20px)',
+                      color: '#FFFFFF',
+                      textAlign: 'center',
+                    }}
+                  >
+                    Total: {data.newStates.length + data.existingStates.length} States
+                  </p>
+                </div>
               </div>
             ))}
           </div>
@@ -329,7 +432,7 @@ const TheAskSlide: React.FC<TheAskSlideProps> = ({ onNext, onPrevious }) => {
           <div 
             className="flex items-center justify-center w-full"
             style={{
-              marginTop: 'clamp(32px, 4vh, 48px)',
+              marginTop: 'clamp(40px, 5vh, 56px)',
               gap: 'clamp(32px, 4vw, 64px)',
             }}
           >
@@ -371,26 +474,6 @@ const TheAskSlide: React.FC<TheAskSlideProps> = ({ onNext, onPrevious }) => {
                 }}
               >
                 Existing Coverage
-              </span>
-            </div>
-
-            <div className="flex items-center" style={{ gap: 'clamp(8px, 1vw, 12px)' }}>
-              <div
-                style={{
-                  width: 'clamp(20px, 2vw, 28px)',
-                  height: 'clamp(20px, 2vw, 28px)',
-                  background: '#D3D3D3',
-                  borderRadius: '4px',
-                }}
-              />
-              <span
-                style={{
-                  fontFamily: 'Apercu Pro',
-                  fontSize: 'clamp(14px, 1.4vw, 18px)',
-                  color: '#FFFFFF',
-                }}
-              >
-                Not Covered
               </span>
             </div>
           </div>

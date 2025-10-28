@@ -51,7 +51,7 @@ const TimelineSlide: React.FC<TimelineSlideProps> = ({ onNext, onPrevious }) => 
       quarter: 'Q4 2025',
       title: 'Momentum & Traction',
       emotion: 'Market Validation & Growth',
-      story: "Marketing started September 15th. DOTs/ITS partnerships: MDOT, NDOT, FDOT, Saudi Arabia. Mobility integrations: Werner, DoorDash, Bringg.com, Sygic. October 1st - Moved PLG for Insurance/PI Firms.",
+      story: "Marketing started September 15th. DOTs/ITS partnerships: MDOT, NDOT, FDOT. Mobility integrations: Werner, DoorDash, Bringg.com, Sygic.",
       icon: <Target size={40} color="#FFCA2B" strokeWidth={2.5} />,
       milestones: [
         '15 PI Firms Joined - 200 searches',
