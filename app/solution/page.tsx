@@ -7,8 +7,8 @@ import { useSlideNavigation } from '@/app/Components/SlideNavigation';
 
 export default function SolutionsSlidePage() {
   const { onNext, onPrevious } = useSlideNavigation({
-    nextSlide: '/tam',
-    previousSlide: '/crash-detection',
+    nextSlide: '/crash-detection',
+    previousSlide: '/breadth-of-impact',
   });
 
   return <SolutionsSlide onNext={onNext} onPrevious={onPrevious} />;

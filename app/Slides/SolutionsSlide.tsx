@@ -104,7 +104,7 @@ const SolutionsSlide: React.FC<SolutionsSlideProps> = ({ onNext, onPrevious }) =
           opacity: 0.6,
         }}
       >
-        5
+        4
       </div>
 
       {/* Content Container */}

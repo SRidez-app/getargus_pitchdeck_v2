@@ -166,6 +166,7 @@ const ProblemSlide: React.FC<ProblemSlideProps> = ({ onNext, onPrevious }) => {
                     paddingRight: '24px',
                     paddingBottom: '20px',
                     paddingLeft: '24px',
+                    flexShrink: 0,
                   }}
                 >
                   <p 
@@ -183,7 +184,7 @@ const ProblemSlide: React.FC<ProblemSlideProps> = ({ onNext, onPrevious }) => {
                 </div>
 
                 {/* Image Container */}
-                <div className="relative w-full flex-1 bg-gray-200">
+                <div className="relative w-full flex-1 bg-gray-200" style={{ minHeight: 0 }}>
                   <img
                     src={card.image}
                     alt={card.title}
@@ -200,11 +201,12 @@ const ProblemSlide: React.FC<ProblemSlideProps> = ({ onNext, onPrevious }) => {
                 <div 
                   className="flex items-center justify-center"
                   style={{
-                    paddingTop: '24px',
-                    paddingRight: '24px',
-                    paddingBottom: '28px',
-                    paddingLeft: '24px',
+                    paddingTop: '20px',
+                    paddingRight: '20px',
+                    paddingBottom: '20px',
+                    paddingLeft: '20px',
                     backgroundColor: '#FFCA2B',
+                    flexShrink: 0,
                   }}
                 >
                   <p 

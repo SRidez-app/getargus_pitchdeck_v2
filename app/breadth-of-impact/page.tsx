@@ -4,7 +4,7 @@ import { useSlideNavigation } from '@/app/Components/SlideNavigation';
 
 export default function BreadthOfImpactPage() {
   const { onNext, onPrevious } = useSlideNavigation({
-    nextSlide: '/crash-detection',
+    nextSlide: '/solution',
     previousSlide: '/problem',
   });
 
