@@ -75,7 +75,7 @@ const WhyArgusStandsAloneSlide: React.FC<WhyArgusStandsAloneSlideProps> = ({ onN
           opacity: 0.6,
         }}
       >
-        7
+        8
       </div>
 
       {/* Content Container */}

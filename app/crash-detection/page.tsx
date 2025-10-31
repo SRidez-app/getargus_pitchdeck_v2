@@ -1,3 +1,5 @@
+
+
 'use client';
 
 import CrashDetectionSlide from '@/app/Slides/CrashDetectionSlide';
@@ -5,7 +7,7 @@ import { useSlideNavigation } from '@/app/Components/SlideNavigation';
 
 export default function CrashDetectionPage() {
   const { onNext, onPrevious } = useSlideNavigation({
-    nextSlide: '/tam',
+nextSlide: '/solution',
     previousSlide: '/breadth-of-impact',
   });
 

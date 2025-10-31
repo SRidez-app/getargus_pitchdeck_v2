@@ -45,14 +45,17 @@ const ProblemSlide: React.FC<ProblemSlideProps> = ({ onNext, onPrevious }) => {
     {
       image: '/city.png',
       title: 'Extreme Fragmentation - 300+ unique camera network',
+      data: '42,514 deaths annually',
     },
     {
       image: '/crash.png',
-      title: 'Accidents and congestion notifications are slow',
+      title: "911 calls, Waze, Cell Phone Data, DOT data don't talk.",
+      data: 'traffic alerts delayed 5-15 min.',
     },
     {
       image: '/medic.png',
-      title: "911 calls, Waze, Cell Phone Data, DOT data don't talk.",
+      title: 'Accidents and congestion notifications are slow',
+      data: '4.2m claims disputed or fraudulent',
     },
   ];
 
@@ -155,8 +158,32 @@ const ProblemSlide: React.FC<ProblemSlideProps> = ({ onNext, onPrevious }) => {
                   borderRadius: '20px',
                 }}
               >
+                {/* Card Title - Now at Top */}
+                <div 
+                  className="flex items-center justify-center"
+                  style={{
+                    paddingTop: '24px',
+                    paddingRight: '24px',
+                    paddingBottom: '20px',
+                    paddingLeft: '24px',
+                  }}
+                >
+                  <p 
+                    className="text-center text-black"
+                    style={{
+                      fontFamily: 'Apercu Pro',
+                      fontWeight: 500,
+                      fontSize: '28px',
+                      lineHeight: '120%',
+                      letterSpacing: '2%',
+                    }}
+                  >
+                    {card.title}
+                  </p>
+                </div>
+
                 {/* Image Container */}
-                <div className="relative w-full aspect-[4/3] bg-gray-200">
+                <div className="relative w-full flex-1 bg-gray-200">
                   <img
                     src={card.image}
                     alt={card.title}
@@ -169,32 +196,28 @@ const ProblemSlide: React.FC<ProblemSlideProps> = ({ onNext, onPrevious }) => {
                   />
                 </div>
                 
-                {/* Card Text */}
+                {/* Data Statistic - Now at Bottom */}
                 <div 
-                  className="flex-1 flex items-center justify-center"
+                  className="flex items-center justify-center"
                   style={{
                     paddingTop: '24px',
                     paddingRight: '24px',
-                    paddingBottom: '40px',
+                    paddingBottom: '28px',
                     paddingLeft: '24px',
+                    backgroundColor: '#FFCA2B',
                   }}
                 >
                   <p 
                     className="text-center text-black"
                     style={{
-                      fontFamily: 'Apercu Pro',
-                      fontWeight: 500,
-                      fontSize: '30px',
-                      lineHeight: '120%',
-                      letterSpacing: '2%',
-                      maxWidth: index === 0 ? '464px' : '452px',
-                      height: '72px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
+                      fontFamily: 'Inter',
+                      fontWeight: 700,
+                      fontSize: '24px',
+                      lineHeight: '130%',
+                      letterSpacing: '0.5px',
                     }}
                   >
-                    {card.title}
+                    {card.data}
                   </p>
                 </div>
               </div>
