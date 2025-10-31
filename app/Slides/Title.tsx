@@ -20,7 +20,7 @@ const TitleSlide: React.FC<TitleSlideProps> = ({ onNext, onPrevious }) => {
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);akdsjf;l AlignJustify;dlkf
+    window.addEventListener('keydown', handleKeyDown); 
 
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
