@@ -84,7 +84,7 @@ const CameraAcquisitionSlide: React.FC<CameraAcquisitionSlideProps> = ({ onNext,
         className="fixed bottom-8 right-8 text-white z-50"
         style={{
           fontFamily: 'var(--font-inter)',
-          fontSize: '14px',
+          fontSize: 'clamp(12px, 1.2vw, 14px)',
           fontWeight: 400,
           opacity: 0.6,
         }}
@@ -212,7 +212,14 @@ const CameraAcquisitionSlide: React.FC<CameraAcquisitionSlideProps> = ({ onNext,
                 flex: '0 0 auto',
               }}
             >
-              <TrendingUp size={clamp(20, 24)} color="#FFCA2B" style={{ flexShrink: 0 }} />
+              <TrendingUp 
+                style={{ 
+                  width: 'clamp(20px, 2vw, 24px)', 
+                  height: 'clamp(20px, 2vw, 24px)', 
+                  flexShrink: 0,
+                  color: '#FFCA2B'
+                }} 
+              />
               <span
                 style={{
                   fontFamily: 'Inter',
@@ -289,7 +296,13 @@ const CameraAcquisitionSlide: React.FC<CameraAcquisitionSlideProps> = ({ onNext,
                           flexShrink: 0,
                         }}
                       >
-                        <Icon size={clamp(24, 32)} color={channel.color} />
+                        <Icon 
+                          style={{ 
+                            width: 'clamp(24px, 2.5vw, 32px)', 
+                            height: 'clamp(24px, 2.5vw, 32px)',
+                            color: channel.color
+                          }} 
+                        />
                       </div>
 
                       {/* Content */}
@@ -317,7 +330,13 @@ const CameraAcquisitionSlide: React.FC<CameraAcquisitionSlideProps> = ({ onNext,
                               border: `1px solid ${channel.color}50`,
                             }}
                           >
-                            <TimelineIcon size={clamp(12, 16)} color={channel.color} />
+                            <TimelineIcon 
+                              style={{ 
+                                width: 'clamp(12px, 1.3vw, 16px)', 
+                                height: 'clamp(12px, 1.3vw, 16px)',
+                                color: channel.color
+                              }} 
+                            />
                             <span
                               style={{
                                 fontFamily: 'Inter',
@@ -461,7 +480,13 @@ const CameraAcquisitionSlide: React.FC<CameraAcquisitionSlideProps> = ({ onNext,
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: 'clamp(10px, 1.2vw, 16px)', marginBottom: 'clamp(6px, 0.8vh, 10px)' }}>
-                <TrendingUp size={clamp(22, 28)} color="#FFCA2B" />
+                <TrendingUp 
+                  style={{ 
+                    width: 'clamp(22px, 2.2vw, 28px)', 
+                    height: 'clamp(22px, 2.2vw, 28px)',
+                    color: '#FFCA2B'
+                  }} 
+                />
                 <h3
                   style={{
                     fontFamily: 'Inter',
@@ -518,7 +543,13 @@ const CameraAcquisitionSlide: React.FC<CameraAcquisitionSlideProps> = ({ onNext,
                       flexShrink: 0,
                     }}
                   >
-                    <Zap size={clamp(24, 32)} color="#4ADE80" />
+                    <Zap 
+                      style={{ 
+                        width: 'clamp(24px, 2.5vw, 32px)', 
+                        height: 'clamp(24px, 2.5vw, 32px)',
+                        color: '#4ADE80'
+                      }} 
+                    />
                   </div>
                   <div>
                     <h4
@@ -569,7 +600,13 @@ const CameraAcquisitionSlide: React.FC<CameraAcquisitionSlideProps> = ({ onNext,
                       flexShrink: 0,
                     }}
                   >
-                    <Network size={clamp(24, 32)} color="#FFCA2B" />
+                    <Network 
+                      style={{ 
+                        width: 'clamp(24px, 2.5vw, 32px)', 
+                        height: 'clamp(24px, 2.5vw, 32px)',
+                        color: '#FFCA2B'
+                      }} 
+                    />
                   </div>
                   <div>
                     <h4
@@ -620,7 +657,13 @@ const CameraAcquisitionSlide: React.FC<CameraAcquisitionSlideProps> = ({ onNext,
                       flexShrink: 0,
                     }}
                   >
-                    <Shield size={clamp(24, 32)} color="#A4B3FF" />
+                    <Shield 
+                      style={{ 
+                        width: 'clamp(24px, 2.5vw, 32px)', 
+                        height: 'clamp(24px, 2.5vw, 32px)',
+                        color: '#A4B3FF'
+                      }} 
+                    />
                   </div>
                   <div>
                     <h4
@@ -870,10 +913,5 @@ const CameraAcquisitionSlide: React.FC<CameraAcquisitionSlideProps> = ({ onNext,
     </div>
   );
 };
-
-// Helper function for clamping icon sizes
-function clamp(min: number, max: number): number {
-  return Math.min(Math.max(min, window.innerWidth / 60), max);
-}
 
 export default CameraAcquisitionSlide;
