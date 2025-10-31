@@ -10,7 +10,6 @@ interface TractionMomentumWaveProps {
 
 const TractionMomentumWave: React.FC<TractionMomentumWaveProps> = ({ onNext, onPrevious }) => {
   const [isVisible, setIsVisible] = useState(false);
-  const [scale, setScale] = useState(1);
 
   useEffect(() => {
     setTimeout(() => setIsVisible(true), 100);
@@ -26,23 +25,6 @@ const TractionMomentumWave: React.FC<TractionMomentumWaveProps> = ({ onNext, onP
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onNext, onPrevious]);
-
-  useEffect(() => {
-    const updateScale = () => {
-      const designWidth = 1920;  // Figma canvas width
-      const designHeight = 1080; // Figma canvas height
-      
-      const scaleX = window.innerWidth / designWidth;
-      const scaleY = window.innerHeight / designHeight;
-      const newScale = Math.min(scaleX, scaleY, 1); // Cap at 1 to avoid upscaling
-      
-      setScale(newScale);
-    };
-
-    updateScale();
-    window.addEventListener('resize', updateScale);
-    return () => window.removeEventListener('resize', updateScale);
-  }, []);
 
   const partners = [
     { name: 'State DOT', type: 'govt', size: 'medium', color: '#FF6347' },
@@ -60,44 +42,44 @@ const TractionMomentumWave: React.FC<TractionMomentumWaveProps> = ({ onNext, onP
     switch (size) {
       case 'large':
         return { 
-          width: '200px', 
-          height: '200px',
-          fontSize: '22px',
+          width: 'clamp(160px, 16vw, 200px)', 
+          height: 'clamp(160px, 16vw, 200px)',
+          fontSize: 'clamp(18px, 1.8vw, 22px)',
         };
       case 'medium':
         return { 
-          width: '160px', 
-          height: '160px',
-          fontSize: '18px',
+          width: 'clamp(130px, 13vw, 160px)', 
+          height: 'clamp(130px, 13vw, 160px)',
+          fontSize: 'clamp(15px, 1.5vw, 18px)',
         };
       case 'small':
         return { 
-          width: '130px', 
-          height: '130px',
-          fontSize: '16px',
+          width: 'clamp(100px, 10vw, 130px)', 
+          height: 'clamp(100px, 10vw, 130px)',
+          fontSize: 'clamp(13px, 1.3vw, 16px)',
         };
       default:
         return { 
-          width: '170px', 
-          height: '170px',
-          fontSize: '18px',
+          width: 'clamp(140px, 14vw, 170px)', 
+          height: 'clamp(140px, 14vw, 170px)',
+          fontSize: 'clamp(15px, 1.5vw, 18px)',
         };
     }
   };
 
   return (
     <div 
-      className="relative w-full h-screen overflow-hidden flex items-center justify-center"
+      className="relative w-full h-screen overflow-hidden"
       style={{
         background: 'linear-gradient(107.56deg, #000000 37.5%, #14004C 100%)',
       }}
     >
-      {/* Page Number - Outside scaling wrapper */}
+      {/* Page Number */}
       <div 
         className="fixed bottom-8 right-8 text-white z-50"
         style={{
           fontFamily: 'var(--font-inter)',
-          fontSize: '14px',
+          fontSize: 'clamp(12px, 1.2vw, 14px)',
           fontWeight: 400,
           opacity: 0.6,
         }}
@@ -105,33 +87,64 @@ const TractionMomentumWave: React.FC<TractionMomentumWaveProps> = ({ onNext, onP
         6
       </div>
 
-      {/* Scaling wrapper */}
+      {/* Content Container */}
       <div 
-        style={{ 
-          transform: `scale(${scale})`,
-          transformOrigin: 'center center',
-          width: '1920px',
-          height: '1080px',
-          position: 'relative',
+        className="relative w-full h-full flex flex-col overflow-y-auto"
+        style={{
+          padding: 'clamp(32px, 4vh, 64px) clamp(48px, 5vw, 96px)',
+          scrollbarWidth: 'thin',
+          scrollbarColor: 'rgba(255, 202, 43, 0.3) transparent',
+          maxWidth: '1920px',
+          margin: '0 auto',
         }}
       >
-        {/* Content Container */}
-        <div 
-          className="relative w-full h-full flex flex-col items-start justify-center px-24 py-16"
-        >
+        <style jsx>{`
+          div::-webkit-scrollbar {
+            width: 8px;
+          }
+          div::-webkit-scrollbar-track {
+            background: transparent;
+          }
+          div::-webkit-scrollbar-thumb {
+            background: rgba(255, 202, 43, 0.3);
+            border-radius: 4px;
+          }
+          div::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 202, 43, 0.5);
+          }
+          @keyframes shine {
+            0%, 100% {
+              transform: translate(-50%, -50%) rotate(0deg);
+            }
+            50% {
+              transform: translate(-40%, -40%) rotate(180deg);
+            }
+          }
+          
+          @keyframes pulse {
+            0%, 100% {
+              opacity: 0.3;
+              transform: translate(-50%, -50%) scale(1);
+            }
+            50% {
+              opacity: 0.6;
+              transform: translate(-50%, -50%) scale(1.1);
+            }
+          }
+        `}</style>
+
         {/* Title Section */}
         <div 
-          className="mb-12 w-full"
           style={{
-            marginBottom: '48px',
+            marginBottom: 'clamp(32px, 4vh, 48px)',
           }}
         >
           <div
             style={{
               width: 'fit-content',
-              paddingTop: '8px',
-              paddingBottom: '8px',
-              marginBottom: '32px',
+              paddingTop: 'clamp(6px, 0.8vh, 8px)',
+              paddingBottom: 'clamp(6px, 0.8vh, 8px)',
+              marginBottom: 'clamp(24px, 3vh, 32px)',
             }}
           >
             <h2 
@@ -139,7 +152,7 @@ const TractionMomentumWave: React.FC<TractionMomentumWaveProps> = ({ onNext, onP
               style={{
                 fontFamily: 'Inter, var(--font-inter)',
                 fontWeight: 600,
-                fontSize: '36px',
+                fontSize: 'clamp(28px, 2.5vw, 36px)',
                 lineHeight: '1.3',
                 letterSpacing: '0.02em',
                 whiteSpace: 'nowrap',
@@ -151,7 +164,7 @@ const TractionMomentumWave: React.FC<TractionMomentumWaveProps> = ({ onNext, onP
               style={{
                 borderBottom: '3px solid #FFCA2B',
                 width: '100%',
-                marginTop: '8px',
+                marginTop: 'clamp(6px, 0.8vh, 8px)',
               }}
             />
           </div>
@@ -160,10 +173,11 @@ const TractionMomentumWave: React.FC<TractionMomentumWaveProps> = ({ onNext, onP
             style={{
               fontFamily: 'Tobias',
               fontWeight: 500,
-              fontSize: '64px',
+              fontSize: 'clamp(36px, 4vw, 64px)',
               lineHeight: '1.3',
               letterSpacing: '0px',
               color: '#FFFFFF',
+              marginBottom: 'clamp(8px, 1vh, 12px)',
             }}
           >
             Pipeline <span style={{ color: '#FFCA2B' }}>Momentum</span>{' '}
@@ -172,31 +186,40 @@ const TractionMomentumWave: React.FC<TractionMomentumWaveProps> = ({ onNext, onP
         </div>
 
         {/* Wave Container */}
-        <div className="w-full flex items-center justify-between" style={{ height: '600px' }}>
+        <div 
+          className="w-full flex gap-8" 
+          style={{ 
+            minHeight: 'clamp(400px, 50vh, 600px)',
+            gap: 'clamp(24px, 3vw, 48px)',
+            flexWrap: 'wrap',
+          }}
+        >
           {/* Left Side - Flowing Partners */}
           <div 
-            className="flex-1 relative"
+            className="relative"
             style={{
-              height: '600px',
-              maxWidth: '65%',
+              flex: '1 1 60%',
+              minWidth: '300px',
+              minHeight: 'clamp(400px, 50vh, 600px)',
             }}
           >
             {/* Arrow positioned above the bubbles */}
             <div
               className="absolute transition-all duration-1000"
               style={{
-                right: '-80px',
-                top: '50px',
+                right: 'clamp(-40px, -6vw, -80px)',
+                top: 'clamp(30px, 4vh, 50px)',
                 opacity: isVisible ? 1 : 0,
                 transitionDelay: '1500ms',
                 zIndex: 10,
               }}
             >
               <ArrowRight 
-                size={100} 
-                color="#FFCA2B" 
-                strokeWidth={3}
                 style={{
+                  width: 'clamp(60px, 8vw, 100px)',
+                  height: 'clamp(60px, 8vw, 100px)',
+                  color: '#FFCA2B',
+                  strokeWidth: 3,
                   filter: 'drop-shadow(0 0 20px rgba(255, 202, 43, 0.6))',
                 }}
               />
@@ -231,15 +254,16 @@ const TractionMomentumWave: React.FC<TractionMomentumWaveProps> = ({ onNext, onP
 
             {/* Floating partner bubbles */}
             <div 
-              className="absolute inset-0 flex flex-wrap items-center justify-start gap-6"
+              className="absolute inset-0 flex flex-wrap items-center justify-start"
               style={{
-                padding: '20px',
+                padding: 'clamp(16px, 2vw, 20px)',
+                gap: 'clamp(16px, 2vw, 24px)',
               }}
             >
               {partners.map((partner, index) => {
                 const sizeStyles = getSizeStyles(partner.size);
                 // Create wave effect by varying vertical position
-                const verticalOffset = index % 2 === 0 ? '0px' : '60px';
+                const verticalOffset = index % 2 === 0 ? '0px' : 'clamp(40px, 5vh, 60px)';
                 
                 return (
                   <div
@@ -255,7 +279,8 @@ const TractionMomentumWave: React.FC<TractionMomentumWaveProps> = ({ onNext, onP
                   >
                     <div
                       style={{
-                        ...sizeStyles,
+                        width: sizeStyles.width,
+                        height: sizeStyles.height,
                         borderRadius: '50%',
                         background: `radial-gradient(circle at 30% 30%, ${partner.color}40 0%, ${partner.color}20 50%, ${partner.color}10 100%)`,
                         border: `3px solid ${partner.color}80`,
@@ -264,7 +289,7 @@ const TractionMomentumWave: React.FC<TractionMomentumWaveProps> = ({ onNext, onP
                         alignItems: 'center',
                         justifyContent: 'center',
                         textAlign: 'center',
-                        padding: '20px',
+                        padding: 'clamp(16px, 2vw, 20px)',
                         boxShadow: `0 8px 32px ${partner.color}30, inset 0 0 20px ${partner.color}15`,
                         position: 'relative',
                         overflow: 'hidden',
@@ -301,10 +326,10 @@ const TractionMomentumWave: React.FC<TractionMomentumWaveProps> = ({ onNext, onP
                       <p
                         style={{
                           fontFamily: 'Inter',
-                          fontSize: '12px',
+                          fontSize: 'clamp(10px, 1vw, 12px)',
                           fontWeight: 500,
                           color: 'rgba(255, 255, 255, 0.8)',
-                          marginTop: '6px',
+                          marginTop: 'clamp(4px, 0.5vh, 6px)',
                           position: 'relative',
                           zIndex: 1,
                         }}
@@ -322,7 +347,8 @@ const TractionMomentumWave: React.FC<TractionMomentumWaveProps> = ({ onNext, onP
           <div 
             className="transition-all duration-1000"
             style={{
-              width: '35%',
+              flex: '1 1 35%',
+              minWidth: '300px',
               opacity: isVisible ? 1 : 0,
               transform: isVisible ? 'scale(1)' : 'scale(0.8)',
               transitionDelay: '1800ms',
@@ -331,9 +357,9 @@ const TractionMomentumWave: React.FC<TractionMomentumWaveProps> = ({ onNext, onP
             <div
               style={{
                 background: 'linear-gradient(135deg, rgba(255, 202, 43, 0.2) 0%, rgba(255, 202, 43, 0.05) 100%)',
-                border: '4px solid #FFCA2B',
-                borderRadius: '28px',
-                padding: '56px 48px',
+                border: 'clamp(3px, 0.3vw, 4px) solid #FFCA2B',
+                borderRadius: 'clamp(20px, 2.5vw, 28px)',
+                padding: 'clamp(36px, 4.5vh, 56px) clamp(32px, 4vw, 48px)',
                 textAlign: 'center',
                 position: 'relative',
                 overflow: 'hidden',
@@ -360,15 +386,15 @@ const TractionMomentumWave: React.FC<TractionMomentumWaveProps> = ({ onNext, onP
                   display: 'inline-block',
                   background: 'rgba(0, 0, 0, 0.6)',
                   border: '2px solid #FFCA2B',
-                  borderRadius: '50px',
-                  padding: '10px 28px',
-                  marginBottom: '36px',
+                  borderRadius: 'clamp(25px, 3vw, 50px)',
+                  padding: 'clamp(8px, 1vh, 10px) clamp(20px, 2.5vw, 28px)',
+                  marginBottom: 'clamp(24px, 3vh, 36px)',
                 }}
               >
                 <p
                   style={{
                     fontFamily: 'Inter',
-                    fontSize: '14px',
+                    fontSize: 'clamp(12px, 1.2vw, 14px)',
                     fontWeight: 700,
                     color: '#FFCA2B',
                     textTransform: 'uppercase',
@@ -382,10 +408,10 @@ const TractionMomentumWave: React.FC<TractionMomentumWaveProps> = ({ onNext, onP
               <h2
                 style={{
                   fontFamily: 'Tobias',
-                  fontSize: '48px',
+                  fontSize: 'clamp(32px, 3.5vw, 48px)',
                   fontWeight: 600,
                   color: '#FFFFFF',
-                  marginBottom: '36px',
+                  marginBottom: 'clamp(24px, 3vh, 36px)',
                   lineHeight: '1.2',
                   position: 'relative',
                   zIndex: 1,
@@ -396,22 +422,29 @@ const TractionMomentumWave: React.FC<TractionMomentumWaveProps> = ({ onNext, onP
               </h2>
 
               {/* ACV Breakdown */}
-              <div className="space-y-4 relative z-10">
+              <div 
+                className="space-y-4 relative z-10" 
+                style={{ 
+                  display: 'flex', 
+                  flexDirection: 'column', 
+                  gap: 'clamp(12px, 1.5vh, 16px)' 
+                }}
+              >
                 <div
                   style={{
                     background: 'rgba(0, 0, 0, 0.5)',
-                    borderRadius: '16px',
-                    padding: '22px',
+                    borderRadius: 'clamp(12px, 1.5vw, 16px)',
+                    padding: 'clamp(16px, 2vh, 22px)',
                     border: '2px solid rgba(255, 99, 71, 0.5)',
                   }}
                 >
                   <p
                     style={{
                       fontFamily: 'Inter',
-                      fontSize: '15px',
+                      fontSize: 'clamp(13px, 1.3vw, 15px)',
                       fontWeight: 500,
                       color: 'rgba(255, 255, 255, 0.8)',
-                      marginBottom: '8px',
+                      marginBottom: 'clamp(6px, 0.8vh, 8px)',
                     }}
                   >
                     Government
@@ -419,7 +452,7 @@ const TractionMomentumWave: React.FC<TractionMomentumWaveProps> = ({ onNext, onP
                   <p
                     style={{
                       fontFamily: 'Tobias',
-                      fontSize: '42px',
+                      fontSize: 'clamp(32px, 3.5vw, 42px)',
                       fontWeight: 700,
                       color: '#FF6347',
                       lineHeight: '1',
@@ -432,18 +465,18 @@ const TractionMomentumWave: React.FC<TractionMomentumWaveProps> = ({ onNext, onP
                 <div
                   style={{
                     background: 'rgba(0, 0, 0, 0.5)',
-                    borderRadius: '16px',
-                    padding: '22px',
+                    borderRadius: 'clamp(12px, 1.5vw, 16px)',
+                    padding: 'clamp(16px, 2vh, 22px)',
                     border: '2px solid rgba(255, 215, 0, 0.5)',
                   }}
                 >
                   <p
                     style={{
                       fontFamily: 'Inter',
-                      fontSize: '15px',
+                      fontSize: 'clamp(13px, 1.3vw, 15px)',
                       fontWeight: 500,
                       color: 'rgba(255, 255, 255, 0.8)',
-                      marginBottom: '8px',
+                      marginBottom: 'clamp(6px, 0.8vh, 8px)',
                     }}
                   >
                     Mobility
@@ -451,7 +484,7 @@ const TractionMomentumWave: React.FC<TractionMomentumWaveProps> = ({ onNext, onP
                   <p
                     style={{
                       fontFamily: 'Tobias',
-                      fontSize: '42px',
+                      fontSize: 'clamp(32px, 3.5vw, 42px)',
                       fontWeight: 700,
                       color: '#FFD700',
                       lineHeight: '1',
@@ -464,19 +497,19 @@ const TractionMomentumWave: React.FC<TractionMomentumWaveProps> = ({ onNext, onP
                 <div
                   style={{
                     background: 'linear-gradient(135deg, #FFCA2B 0%, #FFB000 100%)',
-                    borderRadius: '20px',
-                    padding: '28px',
-                    marginTop: '20px',
+                    borderRadius: 'clamp(16px, 2vw, 20px)',
+                    padding: 'clamp(20px, 2.5vh, 28px)',
+                    marginTop: 'clamp(12px, 1.5vh, 20px)',
                     boxShadow: '0 8px 32px rgba(255, 202, 43, 0.5)',
                   }}
                 >
                   <p
                     style={{
                       fontFamily: 'Inter',
-                      fontSize: '16px',
+                      fontSize: 'clamp(14px, 1.4vw, 16px)',
                       fontWeight: 700,
                       color: '#000000',
-                      marginBottom: '12px',
+                      marginBottom: 'clamp(8px, 1vh, 12px)',
                       textTransform: 'uppercase',
                       letterSpacing: '0.05em',
                     }}
@@ -486,7 +519,7 @@ const TractionMomentumWave: React.FC<TractionMomentumWaveProps> = ({ onNext, onP
                   <p
                     style={{
                       fontFamily: 'Tobias',
-                      fontSize: '64px',
+                      fontSize: 'clamp(48px, 5vw, 64px)',
                       fontWeight: 800,
                       color: '#000000',
                       lineHeight: '1',
@@ -499,31 +532,10 @@ const TractionMomentumWave: React.FC<TractionMomentumWaveProps> = ({ onNext, onP
             </div>
           </div>
         </div>
-      </div>
-      {/* Closing scaling wrapper */}
-      </div>
 
-      <style jsx>{`
-        @keyframes shine {
-          0%, 100% {
-            transform: translate(-50%, -50%) rotate(0deg);
-          }
-          50% {
-            transform: translate(-40%, -40%) rotate(180deg);
-          }
-        }
-        
-        @keyframes pulse {
-          0%, 100% {
-            opacity: 0.3;
-            transform: translate(-50%, -50%) scale(1);
-          }
-          50% {
-            opacity: 0.6;
-            transform: translate(-50%, -50%) scale(1.1);
-          }
-        }
-      `}</style>
+        {/* Bottom spacing */}
+        <div style={{ height: 'clamp(24px, 3vh, 40px)' }} />
+      </div>
     </div>
   );
 };
