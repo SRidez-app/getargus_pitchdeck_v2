@@ -76,7 +76,7 @@ const TeamOverviewSlide: React.FC<TeamOverviewSlideProps> = ({ onNext, onPreviou
           opacity: 0.6,
         }}
       >
-        10
+        13
       </div>
 
       {/* Scrollable Content Container */}

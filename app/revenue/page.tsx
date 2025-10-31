@@ -5,8 +5,8 @@ import { useSlideNavigation } from '@/app/Components/SlideNavigation';
 
 export default function RevenuePage() {
   const { onNext, onPrevious } = useSlideNavigation({
-    nextSlide: '/traction',
-    previousSlide: '/why-argus-stands-alone',
+    nextSlide: '/team-overview',
+    previousSlide: '/unit-of-economics',
   });
 
   return <RevenueProjectionSlide onNext={onNext} onPrevious={onPrevious} />;

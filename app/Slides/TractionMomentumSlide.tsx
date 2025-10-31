@@ -84,7 +84,7 @@ const TractionMomentumWave: React.FC<TractionMomentumWaveProps> = ({ onNext, onP
           opacity: 0.6,
         }}
       >
-        6
+        10
       </div>
 
       {/* Content Container */}

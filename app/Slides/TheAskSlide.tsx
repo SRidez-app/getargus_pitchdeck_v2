@@ -129,7 +129,7 @@ const TheAskSlide: React.FC<TheAskSlideProps> = ({ onNext, onPrevious }) => {
           opacity: 0.6,
         }}
       >
-        11
+        14
       </div>
 
       {/* Content Container */}

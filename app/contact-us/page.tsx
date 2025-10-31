@@ -5,7 +5,7 @@ import { useSlideNavigation } from '@/app/Components/SlideNavigation';
 
 export default function ContactUsPage() {
   const { onNext, onPrevious } = useSlideNavigation({
-    nextSlide: null,
+    nextSlide: '/title',
     previousSlide: '/the-ask',
   });
 
