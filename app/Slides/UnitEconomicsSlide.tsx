@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { TrendingUp, Camera, DollarSign, Users } from 'lucide-react';
 
 interface UnitEconomicsSlideProps {
   onNext?: () => void;
@@ -9,6 +10,7 @@ interface UnitEconomicsSlideProps {
 
 const UnitEconomicsSlide: React.FC<UnitEconomicsSlideProps> = ({ onNext, onPrevious }) => {
   const [isVisible, setIsVisible] = useState(false);
+  const [scale, setScale] = useState(1);
 
   useEffect(() => {
     setTimeout(() => setIsVisible(true), 100);
@@ -25,72 +27,97 @@ const UnitEconomicsSlide: React.FC<UnitEconomicsSlideProps> = ({ onNext, onPrevi
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onNext, onPrevious]);
 
-  const yearData = [
+  useEffect(() => {
+    const updateScale = () => {
+      const designWidth = 1920;  // Figma canvas width
+      const designHeight = 1080; // Figma canvas height
+      
+      const scaleX = window.innerWidth / designWidth;
+      const scaleY = window.innerHeight / designHeight;
+      const newScale = Math.min(scaleX, scaleY, 1); // Cap at 1 to avoid upscaling
+      
+      setScale(newScale);
+    };
+
+    updateScale();
+    window.addEventListener('resize', updateScale);
+    return () => window.removeEventListener('resize', updateScale);
+  }, []);
+
+  // Werner Model (per state, ~2500 cameras)
+  const camerasPerState = 2500;
+  const alertsPerCamera = 5; // per month
+  const wernerModel = {
+    setupCost: 10000,
+    monthlyFlat: 5000,
+    alertsPerMonth: camerasPerState * alertsPerCamera, // 12,500
+    pricePerAlert: 0.50,
+    monthlyRevenue: 11250, // 5k + (12.5k * 0.50)
+    annualRevenue: 135000,
+    customerSavings: 60000,
+    annualSavings: 720000,
+  };
+
+  // Camera scaling scenarios
+  const cameraScaling = [
     {
-      year: 'Year 1',
-      period: 'Current',
-      cogs: 150000,
-      government: 0,
-      mobility: 500000,
+      cameras: 10000,
+      alerts: 50000, // 10k * 5
+      monthlyRevenue: 30000, // 5k + (50k * 0.50)
+      annualRevenue: 360000,
+      states: 4, // 10k / 2500
     },
     {
-      year: 'Year 2',
-      period: '2025 (E)',
-      cogs: 200000,
-      government: 500000,
-      mobility: 20000000,
+      cameras: 20000,
+      alerts: 100000,
+      monthlyRevenue: 55000,
+      annualRevenue: 660000,
+      states: 8,
     },
     {
-      year: 'Year 4',
-      period: '2027 (E)',
-      cogs: 250000,
-      government: 1500000,
-      mobility: 50000000,
+      cameras: 50000,
+      alerts: 250000,
+      monthlyRevenue: 130000,
+      annualRevenue: 1560000,
+      states: 20,
     },
   ];
 
-  // Process data for each year
-  // First, find the maximum values across all years for scaling
-  const maxCogs = Math.max(...yearData.map(y => y.cogs));
-  const maxGov = Math.max(...yearData.map(y => y.government));
-  const maxMobility = Math.max(...yearData.map(y => y.mobility));
-  const maxTotal = Math.max(...yearData.map(y => y.government + y.mobility + y.cogs));
+  // Multi-client scenarios (shared camera networks)
+  // Revenue = Clients × (Cameras ÷ 10K) × $360K per 10K camera segment
+  const revenuePerClient = 360000; // Annual revenue for 10K cameras
+  const multiClient = [
+    { clients: 5, cameras: 50000, annualRevenue: 5 * 5 * revenuePerClient },      // 5 clients × 5 (10K groups) × $360K = $9M
+    { clients: 10, cameras: 100000, annualRevenue: 10 * 10 * revenuePerClient },  // 10 × 10 × $360K = $36M
+    { clients: 25, cameras: 250000, annualRevenue: 25 * 25 * revenuePerClient },  // 25 × 25 × $360K = $225M
+  ];
 
-  const processedData = yearData.map(year => {
-    const totalRevenue = year.government + year.mobility;
-    const grossProfit = totalRevenue - year.cogs;
-    const grossMarginPercent = ((grossProfit / totalRevenue) * 100).toFixed(0);
-    
-    // Calculate segment heights as percentage of max total
-    // This makes segments proportional to their actual values
-    const cogsPercent = (year.cogs / maxTotal) * 100;
-    const govPercent = (year.government / maxTotal) * 100;
-    const mobilityPercent = (year.mobility / maxTotal) * 100;
-    
-    // Margin fills the remaining space to make total = 100%
-    const usedPercent = cogsPercent + govPercent + mobilityPercent;
-    const marginPercent = 100 - usedPercent;
+  const formatCurrency = (value: number, compact: boolean = false) => {
+    if (compact && value >= 1000000) {
+      return `$${(value / 1000000).toFixed(1)}M`;
+    } else if (compact && value >= 1000) {
+      return `$${(value / 1000).toFixed(0)}K`;
+    }
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(value);
+  };
 
-    return {
-      ...year,
-      totalRevenue,
-      grossProfit,
-      grossMarginPercent,
-      cogsPercent,
-      govPercent,
-      mobilityPercent,
-      marginPercent,
-    };
-  });
+  const formatNumber = (value: number) => {
+    return new Intl.NumberFormat('en-US').format(value);
+  };
 
   return (
     <div 
-      className="relative w-full h-screen overflow-hidden"
+      className="relative w-full h-screen overflow-hidden flex items-center justify-center"
       style={{
         background: 'linear-gradient(107.56deg, #000000 37.5%, #14004C 100%)',
       }}
     >
-      {/* Page Number */}
+      {/* Page Number - Outside scaling wrapper */}
       <div 
         className="fixed bottom-8 right-8 text-white z-50"
         style={{
@@ -103,406 +130,448 @@ const UnitEconomicsSlide: React.FC<UnitEconomicsSlideProps> = ({ onNext, onPrevi
         9
       </div>
 
-      {/* Content Container */}
+      {/* Scaling wrapper */}
       <div 
-        className="relative w-full h-full flex flex-col items-start justify-start px-12 pt-8 pb-12 overflow-y-auto"
-        style={{
-          scrollbarWidth: 'thin',
-          scrollbarColor: 'rgba(255, 202, 43, 0.3) transparent',
+        style={{ 
+          transform: `scale(${scale})`,
+          transformOrigin: 'center center',
+          width: '1920px',
+          height: '1080px',
+          position: 'relative',
+          opacity: isVisible ? 1 : 0,
+          transition: 'opacity 1s ease',
         }}
       >
-        <style jsx>{`
-          div::-webkit-scrollbar {
-            width: 8px;
-          }
-          div::-webkit-scrollbar-track {
-            background: transparent;
-          }
-          div::-webkit-scrollbar-thumb {
-            background: rgba(255, 202, 43, 0.3);
-            border-radius: 4px;
-          }
-          div::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 202, 43, 0.5);
-          }
-        `}</style>
-
-        {/* Title Section */}
-        <div 
-          className="mb-20"
-          style={{
-            marginBottom: 'clamp(80px, 10vh, 120px)',
-          }}
-        >
-          <div
-            style={{
-              width: 'fit-content',
-              paddingTop: '8px',
-              paddingBottom: '8px',
-              marginBottom: '40px',
-            }}
-          >
-            <h2 
-              className="text-white"
+        {/* Content Container */}
+        <div className="relative w-full h-full flex flex-col items-start justify-start px-24 pt-16 pb-16">
+          {/* Title Section */}
+          <div className="mb-12">
+            <div
               style={{
-                fontFamily: 'Inter, var(--font-inter)',
-                fontWeight: 600,
-                fontSize: 'clamp(24px, 2vw, 36px)',
-                lineHeight: '1.2',
-                letterSpacing: '0.02em',
-                whiteSpace: 'nowrap',
+                width: 'fit-content',
+                paddingTop: '8px',
+                paddingBottom: '8px',
+                marginBottom: '32px',
               }}
             >
-              FINANCIAL PROJECTIONS
-            </h2>
-            <div 
-              style={{
-                borderBottom: '3px solid #FFCA2B',
-                width: '100%',
-                marginTop: '8px',
-              }}
-            />
-          </div>
-          
-          <h1 
-            style={{
-              fontFamily: 'Tobias',
-              fontWeight: 500,
-              fontSize: 'clamp(36px, 4vw, 72px)',
-              lineHeight: '1.2',
-              letterSpacing: '0px',
-              color: '#FFFFFF',
-            }}
-          >
-            Revenue Breakdown{' '}
-            <span style={{ color: '#FFCA2B' }}>& Margins</span>
-          </h1>
-        </div>
-
-        {/* Vertical Bar Charts */}
-        <div 
-          className="flex justify-center items-end gap-16 w-full max-w-6xl mx-auto transition-all duration-1000"
-          style={{
-            opacity: isVisible ? 1 : 0,
-            transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
-            transitionDelay: '200ms',
-            height: 'clamp(400px, 50vh, 600px)',
-          }}
-        >
-          {processedData.map((yearItem, index) => {            
-            return (
-              <div 
-                key={index}
-                className="flex flex-col items-center transition-all duration-1000"
+              <h2 
+                className="text-white"
                 style={{
-                  opacity: isVisible ? 1 : 0,
-                  transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
-                  transitionDelay: `${index * 200 + 400}ms`,
-                  width: 'clamp(140px, 15vw, 220px)',
+                  fontFamily: 'Inter, var(--font-inter)',
+                  fontWeight: 600,
+                  fontSize: '36px',
+                  lineHeight: '44px',
+                  letterSpacing: '0.02em',
+                  whiteSpace: 'nowrap',
                 }}
               >
-                {/* Gross Margin Label at Top */}
-                <div
-                  className="text-center mb-4"
-                  style={{
-                    fontFamily: 'var(--font-inter)',
-                    fontSize: 'clamp(16px, 1.3vw, 22px)',
-                    fontWeight: 700,
-                    color: '#FFCA2B',
-                  }}
-                >
-                  {yearItem.grossMarginPercent}% Margin
-                </div>
+                UNIT ECONOMICS
+              </h2>
+              <div 
+                style={{
+                  borderBottom: '3px solid #FFCA2B',
+                  width: '100%',
+                  marginTop: '8px',
+                }}
+              />
+            </div>
+            
+            <h1 
+              style={{
+                fontFamily: 'Tobias',
+                fontWeight: 500,
+                fontSize: '64px',
+                lineHeight: '76px',
+                letterSpacing: '0px',
+                color: '#FFFFFF',
+                marginBottom: '8px',
+              }}
+            >
+              Scalable Model with{' '}
+              <span style={{ color: '#FFCA2B' }}>Exponential Growth</span>
+            </h1>
+            <p
+              style={{
+                fontFamily: 'Apercu Pro',
+                fontSize: '22px',
+                fontWeight: 400,
+                lineHeight: '1.5',
+                color: 'rgba(255, 255, 255, 0.8)',
+              }}
+            >
+              From single-client economics to multi-client compounding
+            </p>
+          </div>
 
-                {/* Vertical Stacked Bar - ALL BARS ARE 100% HEIGHT */}
-                <div
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    display: 'flex',
-                    flexDirection: 'column-reverse',
-                    borderRadius: '8px',
-                    overflow: 'hidden',
-                    border: '2px solid rgba(164, 179, 255, 0.3)',
-                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
-                  }}
-                >
-                  {/* COGS Segment (Bottom) - Uses percentage of total */}
-                  <div
-                    style={{
-                      flex: `0 0 ${yearItem.cogsPercent}%`,
-                      backgroundColor: '#6B7280',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      padding: '16px 8px',
-                      borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-                      minHeight: '80px',
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontFamily: 'var(--font-inter)',
-                        fontSize: 'clamp(11px, 1vw, 14px)',
-                        fontWeight: 600,
-                        color: '#FFFFFF',
-                        marginBottom: '6px',
-                      }}
-                    >
-                      COGS
-                    </span>
-                    <span
-                      style={{
-                        fontFamily: 'var(--font-inter)',
-                        fontSize: 'clamp(13px, 1.1vw, 16px)',
-                        fontWeight: 700,
-                        color: '#FFFFFF',
-                      }}
-                    >
-                      ${yearItem.cogs >= 1000000 
-                        ? `${(yearItem.cogs / 1000000).toFixed(1)}M`
-                        : `${(yearItem.cogs / 1000).toFixed(0)}K`}
-                    </span>
+          {/* Three Cards Side by Side */}
+          <div 
+            className="flex justify-between items-stretch w-full"
+            style={{
+              gap: '32px',
+              maxWidth: '1680px',
+            }}
+          >
+          {/* Werner Model Card */}
+          <div
+            style={{
+              background: 'rgba(0, 0, 0, 0.4)',
+              border: '2px solid rgba(255, 202, 43, 0.5)',
+              borderRadius: '20px',
+              padding: '28px',
+              flex: '1',
+              minWidth: '520px',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
+              <div
+                style={{
+                  background: '#FFCA2B',
+                  borderRadius: '8px',
+                  padding: '8px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <DollarSign size={24} color="#000" strokeWidth={3} />
+              </div>
+              <h3
+                style={{
+                  fontFamily: 'Inter',
+                  fontSize: '26px',
+                  fontWeight: 700,
+                  color: '#FFCA2B',
+                }}
+              >
+                Werner Model
+              </h3>
+            </div>
+
+            <div style={{ fontFamily: 'Inter', fontSize: '15px', color: '#FFF' }}>
+              <div style={{ 
+                background: 'rgba(255, 202, 43, 0.1)', 
+                padding: '16px', 
+                borderRadius: '12px',
+                marginBottom: '16px',
+                border: '1px solid rgba(255, 202, 43, 0.3)'
+              }}>
+                <p style={{ fontWeight: 600, color: '#FFCA2B', marginBottom: '12px', fontSize: '16px' }}>Per State (~2,500 cameras)</p>
+                <div style={{ display: 'grid', gap: '8px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span style={{ color: 'rgba(255, 255, 255, 0.7)' }}>Setup Cost:</span>
+                    <span style={{ fontWeight: 600 }}>{formatCurrency(wernerModel.setupCost)}</span>
                   </div>
-
-                  {/* Government Segment */}
-                  {yearItem.government > 0 && (
-                    <div
-                      style={{
-                        flex: `0 0 ${yearItem.govPercent}%`,
-                        backgroundColor: '#B8860B',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        padding: '16px 8px',
-                        borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-                        minHeight: '70px',
-                      }}
-                    >
-                      <span
-                        style={{
-                          fontFamily: 'var(--font-inter)',
-                          fontSize: 'clamp(10px, 0.9vw, 13px)',
-                          fontWeight: 600,
-                          color: '#FFFFFF',
-                          marginBottom: '6px',
-                        }}
-                      >
-                        Government
-                      </span>
-                      <span
-                        style={{
-                          fontFamily: 'var(--font-inter)',
-                          fontSize: 'clamp(13px, 1.1vw, 16px)',
-                          fontWeight: 700,
-                          color: '#FFFFFF',
-                        }}
-                      >
-                        ${yearItem.government >= 1000000 
-                          ? `${(yearItem.government / 1000000).toFixed(1)}M`
-                          : `${(yearItem.government / 1000).toFixed(0)}K`}
-                      </span>
-                    </div>
-                  )}
-
-                  {/* Mobility Segment */}
-                  <div
-                    style={{
-                      flex: `0 0 ${yearItem.mobilityPercent}%`,
-                      backgroundColor: '#FFD700',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      padding: '16px 8px',
-                      borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontFamily: 'var(--font-inter)',
-                        fontSize: 'clamp(11px, 1vw, 14px)',
-                        fontWeight: 600,
-                        color: '#1F2937',
-                        marginBottom: '6px',
-                      }}
-                    >
-                      Mobility
-                    </span>
-                    <span
-                      style={{
-                        fontFamily: 'var(--font-inter)',
-                        fontSize: 'clamp(13px, 1.1vw, 16px)',
-                        fontWeight: 700,
-                        color: '#1F2937',
-                      }}
-                    >
-                      ${yearItem.mobility >= 1000000 
-                        ? `${(yearItem.mobility / 1000000).toFixed(1)}M`
-                        : `${(yearItem.mobility / 1000).toFixed(0)}K`}
-                    </span>
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span style={{ color: 'rgba(255, 255, 255, 0.7)' }}>Monthly Flat Rate:</span>
+                    <span style={{ fontWeight: 600 }}>{formatCurrency(wernerModel.monthlyFlat)}</span>
                   </div>
-
-               
-                </div>
-
-                {/* Year Labels */}
-                <div className="text-center mt-6">
-                  <div
-                    style={{
-                      fontFamily: 'var(--font-inter)',
-                      fontSize: 'clamp(20px, 1.5vw, 28px)',
-                      fontWeight: 700,
-                      color: '#FFFFFF',
-                      marginBottom: '4px',
-                    }}
-                  >
-                    {yearItem.year}
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span style={{ color: 'rgba(255, 255, 255, 0.7)' }}>Alerts/Month:</span>
+                    <span style={{ fontWeight: 600 }}>{formatNumber(wernerModel.alertsPerMonth)}</span>
                   </div>
-                  <div
-                    style={{
-                      fontFamily: 'var(--font-inter)',
-                      fontSize: 'clamp(14px, 1vw, 18px)',
-                      fontWeight: 500,
-                      color: 'rgba(255, 255, 255, 0.6)',
-                    }}
-                  >
-                    {yearItem.period}
-                  </div>
-                  <div
-                    className="mt-2"
-                    style={{
-                      fontFamily: 'var(--font-inter)',
-                      fontSize: 'clamp(13px, 0.95vw, 16px)',
-                      fontWeight: 600,
-                      color: 'rgba(255, 255, 255, 0.8)',
-                    }}
-                  >
-                    ${yearItem.totalRevenue >= 1000000 
-                      ? `${(yearItem.totalRevenue / 1000000).toFixed(1)}M`
-                      : `${(yearItem.totalRevenue / 1000).toFixed(0)}K`} Revenue
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span style={{ color: 'rgba(255, 255, 255, 0.7)' }}>Per Alert:</span>
+                    <span style={{ fontWeight: 600 }}>{formatCurrency(wernerModel.pricePerAlert)}</span>
                   </div>
                 </div>
               </div>
-            );
-          })}
-        </div>
 
-        {/* Legend */}
-        <div
-          className="w-full max-w-6xl mx-auto mt-8 transition-all duration-1000"
-          style={{
-            opacity: isVisible ? 1 : 0,
-            transitionDelay: '1200ms',
-          }}
-        >
-          <div className="flex justify-center gap-8 flex-wrap">
-            <div className="flex items-center gap-2">
-              <div
-                style={{
-                  width: '20px',
-                  height: '20px',
-                  backgroundColor: '#6B7280',
-                  borderRadius: '4px',
-                }}
-              />
-              <span
-                style={{
-                  fontFamily: 'var(--font-inter)',
-                  fontSize: 'clamp(13px, 0.9vw, 16px)',
-                  fontWeight: 500,
-                  color: '#FFFFFF',
-                }}
-              >
-                COGS
-              </span>
+              <div style={{ 
+                borderTop: '2px solid #FFCA2B', 
+                paddingTop: '16px',
+                marginTop: '16px'
+              }}>
+                <div style={{ display: 'grid', gap: '12px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '17px', fontWeight: 600 }}>Monthly Revenue:</span>
+                    <span style={{ 
+                      fontSize: '22px', 
+                      fontWeight: 700,
+                      color: '#FFCA2B'
+                    }}>
+                      {formatCurrency(wernerModel.monthlyRevenue)}
+                    </span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '17px', fontWeight: 600 }}>Annual Revenue:</span>
+                    <span style={{ 
+                      fontSize: '22px', 
+                      fontWeight: 700,
+                      color: '#FFCA2B'
+                    }}>
+                      {formatCurrency(wernerModel.annualRevenue)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ 
+                background: 'rgba(164, 179, 255, 0.15)', 
+                padding: '16px', 
+                borderRadius: '12px',
+                marginTop: '16px',
+                border: '1px solid rgba(164, 179, 255, 0.3)'
+              }}>
+                <p style={{ fontWeight: 600, color: '#A4B3FF', marginBottom: '8px', fontSize: '16px' }}>Customer Value</p>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: 'rgba(255, 255, 255, 0.7)' }}>Monthly Savings:</span>
+                  <span style={{ fontWeight: 700, color: '#A4B3FF', fontSize: '18px' }}>
+                    {formatCurrency(wernerModel.customerSavings)}
+                  </span>
+                </div>
+                <div style={{ 
+                  fontSize: '13px', 
+                  color: 'rgba(255, 255, 255, 0.6)', 
+                  marginTop: '8px',
+                  fontStyle: 'italic'
+                }}>
+                  ROI: Customer saves {formatCurrency(wernerModel.annualSavings)}/year
+                </div>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
+          </div>
+
+          {/* Camera Scaling Card */}
+          <div
+            style={{
+              background: 'rgba(0, 0, 0, 0.4)',
+              border: '2px solid rgba(164, 179, 255, 0.5)',
+              borderRadius: '20px',
+              padding: '28px',
+              flex: '1',
+              minWidth: '520px',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
               <div
                 style={{
-                  width: '20px',
-                  height: '20px',
-                  backgroundColor: '#B8860B',
-                  borderRadius: '4px',
-                }}
-              />
-              <span
-                style={{
-                  fontFamily: 'var(--font-inter)',
-                  fontSize: 'clamp(13px, 0.9vw, 16px)',
-                  fontWeight: 500,
-                  color: '#FFFFFF',
+                  background: 'rgba(164, 179, 255, 0.3)',
+                  borderRadius: '8px',
+                  padding: '8px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}
               >
-                Government
-              </span>
+                <Camera size={24} color="#A4B3FF" strokeWidth={2.5} />
+              </div>
+              <h3
+                style={{
+                  fontFamily: 'Inter',
+                  fontSize: '26px',
+                  fontWeight: 700,
+                  color: '#A4B3FF',
+                }}
+              >
+                Camera Scaling
+              </h3>
             </div>
-            <div className="flex items-center gap-2">
-              <div
-                style={{
-                  width: '20px',
-                  height: '20px',
-                  backgroundColor: '#FFD700',
-                  borderRadius: '4px',
-                }}
-              />
-              <span
-                style={{
-                  fontFamily: 'var(--font-inter)',
-                  fontSize: 'clamp(13px, 0.9vw, 16px)',
-                  fontWeight: 500,
-                  color: '#FFFFFF',
-                }}
-              >
-                Mobility
-              </span>
+
+            <div style={{ fontFamily: 'Inter', fontSize: '15px' }}>
+              {cameraScaling.map((scenario, idx) => (
+                <div
+                  key={idx}
+                  style={{
+                    background: idx % 2 === 0 ? 'rgba(255, 255, 255, 0.05)' : 'transparent',
+                    padding: '16px',
+                    borderRadius: '12px',
+                    marginBottom: idx < cameraScaling.length - 1 ? '12px' : '0',
+                    border: '1px solid rgba(164, 179, 255, 0.2)',
+                  }}
+                >
+                  <div style={{ 
+                    display: 'flex', 
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    marginBottom: '12px'
+                  }}>
+                    <div>
+                      <div style={{ 
+                        fontSize: '22px', 
+                        fontWeight: 700,
+                        color: '#FFCA2B'
+                      }}>
+                        {formatNumber(scenario.cameras)}
+                      </div>
+                      <div style={{ 
+                        fontSize: '13px', 
+                        color: 'rgba(255, 255, 255, 0.6)',
+                        fontWeight: 500
+                      }}>
+                        cameras (~{scenario.states} states)
+                      </div>
+                    </div>
+                    <TrendingUp size={28} color="#FFCA2B" strokeWidth={2.5} />
+                  </div>
+
+                  <div style={{ display: 'grid', gap: '6px', color: '#FFF' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span style={{ color: 'rgba(255, 255, 255, 0.7)' }}>Monthly Alerts:</span>
+                      <span style={{ fontWeight: 600 }}>{formatNumber(scenario.alerts)}</span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span style={{ color: 'rgba(255, 255, 255, 0.7)' }}>Monthly Revenue:</span>
+                      <span style={{ fontWeight: 700, color: '#FFCA2B' }}>
+                        {formatCurrency(scenario.monthlyRevenue)}
+                      </span>
+                    </div>
+                    <div style={{ 
+                      display: 'flex', 
+                      justifyContent: 'space-between',
+                      paddingTop: '8px',
+                      borderTop: '1px solid rgba(255, 202, 43, 0.3)',
+                      marginTop: '4px'
+                    }}>
+                      <span style={{ fontWeight: 600 }}>Annual Revenue:</span>
+                      <span style={{ 
+                        fontSize: '18px',
+                        fontWeight: 700,
+                        color: '#FFCA2B'
+                      }}>
+                        {formatCurrency(scenario.annualRevenue, true)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
-            <div className="flex items-center gap-2">
+          </div>
+
+          {/* Multi-Client Compounding Card */}
+          <div
+            style={{
+              background: 'rgba(0, 0, 0, 0.4)',
+              border: '2px solid rgba(255, 107, 107, 0.5)',
+              borderRadius: '20px',
+              padding: '28px',
+              flex: '1',
+              minWidth: '520px',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
               <div
                 style={{
-                  width: '20px',
-                  height: '20px',
-                  backgroundColor: '#10B981',
-                  borderRadius: '4px',
-                }}
-              />
-              <span
-                style={{
-                  fontFamily: 'var(--font-inter)',
-                  fontSize: 'clamp(13px, 0.9vw, 16px)',
-                  fontWeight: 500,
-                  color: '#FFFFFF',
+                  background: 'rgba(255, 107, 107, 0.3)',
+                  borderRadius: '8px',
+                  padding: '8px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}
               >
-                Gross Margin
-              </span>
+                <Users size={24} color="#FF6B6B" strokeWidth={2.5} />
+              </div>
+              <h3
+                style={{
+                  fontFamily: 'Inter',
+                  fontSize: '26px',
+                  fontWeight: 700,
+                  color: '#FF6B6B',
+                }}
+              >
+                Multi-Client Growth
+              </h3>
+            </div>
+
+            <p style={{
+              fontFamily: 'Apercu Pro',
+              fontSize: '15px',
+              color: 'rgba(255, 255, 255, 0.8)',
+              marginBottom: '20px',
+              lineHeight: '1.5'
+            }}>
+              Shared camera networks unlock exponential growth
+            </p>
+
+            <div style={{ fontFamily: 'Inter', fontSize: '15px' }}>
+              {multiClient.map((scenario, idx) => (
+                <div
+                  key={idx}
+                  style={{
+                    background: 'rgba(255, 107, 107, 0.1)',
+                    padding: '20px',
+                    borderRadius: '12px',
+                    marginBottom: idx < multiClient.length - 1 ? '16px' : '0',
+                    border: '2px solid rgba(255, 107, 107, 0.3)',
+                    transition: 'all 0.3s ease',
+                  }}
+                >
+                  <div style={{ 
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 1fr',
+                    gap: '16px',
+                    alignItems: 'center'
+                  }}>
+                    <div>
+                      <div style={{ 
+                        fontSize: '42px', 
+                        fontWeight: 700,
+                        color: '#FF6B6B',
+                        lineHeight: '1'
+                      }}>
+                        {scenario.clients}
+                      </div>
+                      <div style={{ 
+                        fontSize: '15px', 
+                        color: 'rgba(255, 255, 255, 0.7)',
+                        fontWeight: 500,
+                        marginTop: '4px'
+                      }}>
+                        clients
+                      </div>
+                    </div>
+                    <div style={{ textAlign: 'right' }}>
+                      <div style={{ 
+                        fontSize: '13px', 
+                        color: 'rgba(255, 255, 255, 0.6)',
+                        marginBottom: '4px'
+                      }}>
+                        {formatNumber(scenario.cameras)} cameras
+                      </div>
+                      <div style={{ 
+                        fontSize: '28px', 
+                        fontWeight: 700,
+                        color: '#FFCA2B',
+                        lineHeight: '1'
+                      }}>
+                        {formatCurrency(scenario.annualRevenue, true)}
+                      </div>
+                      <div style={{ 
+                        fontSize: '12px', 
+                        color: 'rgba(255, 255, 255, 0.5)',
+                        marginTop: '4px',
+                        fontStyle: 'italic'
+                      }}>
+                        annual revenue
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+
+              <div style={{
+                marginTop: '20px',
+                padding: '16px',
+                background: 'rgba(255, 202, 43, 0.15)',
+                borderRadius: '12px',
+                border: '1px solid rgba(255, 202, 43, 0.4)',
+                textAlign: 'center'
+              }}>
+                <p style={{
+                  fontSize: '14px',
+                  color: 'rgba(255, 255, 255, 0.9)',
+                  fontWeight: 600,
+                  lineHeight: '1.5'
+                }}>
+                  <span style={{ color: '#FFCA2B' }}>Exponential scaling:</span> Multiple clients on shared networks
+                </p>
+              </div>
             </div>
           </div>
         </div>
-
-        {/* Footer Note */}
-        <div
-          className="text-center w-full mt-8 transition-all duration-1000"
-          style={{
-            opacity: isVisible ? 1 : 0,
-            transitionDelay: '1400ms',
-          }}
-        >
-          <p
-            style={{
-              fontFamily: 'var(--font-inter)',
-              fontSize: 'clamp(12px, 0.8vw, 14px)',
-              color: 'rgba(255, 255, 255, 0.5)',
-              fontStyle: 'italic',
-            }}
-          >
-            COGS = Cost of Goods Sold | (E) = Estimated
-          </p>
-        </div>
       </div>
     </div>
+  </div>
   );
 };
 
