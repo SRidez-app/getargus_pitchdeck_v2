@@ -5,8 +5,8 @@ import { useSlideNavigation } from '@/app/Components/SlideNavigation';
 
 export default function TamPage() {
   const { onNext, onPrevious } = useSlideNavigation({
-    nextSlide: '/timeline',
-    previousSlide: '/crash-detection',
+nextSlide: '/camera-acquisition',
+previousSlide: '/solution', 
   });
 
   return <TamSlide onNext={onNext} onPrevious={onPrevious} />;

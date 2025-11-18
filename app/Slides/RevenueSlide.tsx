@@ -12,19 +12,20 @@ const RevenueProjectionSlide: React.FC<RevenueProjectionSlideProps> = ({ onNext,
   const [isVisible, setIsVisible] = useState(false);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [hasUserInteracted, setHasUserInteracted] = useState(false);
+  const [showAllIndustries, setShowAllIndustries] = useState(false);
   const chartRef = useRef<any>(null);
 
   const data = [
-    { year: '1', mobility: 100000, government: 20000, insurance: 20000 },
-    { year: '2', mobility: 5000000, government: 3346667, insurance: 244949 },
-    { year: '3', mobility: 19000000, government: 6673334, insurance: 3000000 },
-    { year: '4', mobility: 50000000, government: 10000001, insurance: 4500000 },
-    { year: '5', mobility: 65000000, government: 17000002, insurance: 7650000 },
-    { year: '6', mobility: 84500000, government: 28900003, insurance: 13005000 },
-    { year: '7', mobility: 109850000, government: 49130005, insurance: 22108500 },
-    { year: '8', mobility: 142805000, government: 83521008, insurance: 37584450 },
-    { year: '9', mobility: 185646500, government: 141984714, insurance: 63894565 },
-    { year: '10', mobility: 241340450, government: 241374012, insurance: 108621761 },
+    { year: '2026', mobility: 100000, government: 20000, insurance: 20000 },
+    { year: '2027', mobility: 5000000, government: 3346667, insurance: 244949 },
+    { year: '2028', mobility: 19000000, government: 6673334, insurance: 3000000 },
+    { year: '2029', mobility: 50000000, government: 10000001, insurance: 4500000 },
+    { year: '2030', mobility: 65000000, government: 17000002, insurance: 7650000 },
+    { year: '2031', mobility: 84500000, government: 28900003, insurance: 13005000 },
+    { year: '2032', mobility: 109850000, government: 49130005, insurance: 22108500 },
+    { year: '2033', mobility: 142805000, government: 83521008, insurance: 37584450 },
+    { year: '2034', mobility: 185646500, government: 141984714, insurance: 63894565 },
+    { year: '2035', mobility: 241340450, government: 241374012, insurance: 108621761 },
   ];
 
   useEffect(() => {
@@ -85,7 +86,7 @@ const RevenueProjectionSlide: React.FC<RevenueProjectionSlideProps> = ({ onNext,
               paddingBottom: '8px',
             }}
           >
-            Year {label}
+            {label}
           </p>
           {payload.map((entry: any, index: number) => (
             <p
@@ -140,7 +141,7 @@ const RevenueProjectionSlide: React.FC<RevenueProjectionSlideProps> = ({ onNext,
           opacity: 0.6,
         }}
       >
-        8
+        12
       </div>
 
       {/* Content Container */}
@@ -230,7 +231,7 @@ const RevenueProjectionSlide: React.FC<RevenueProjectionSlideProps> = ({ onNext,
           >
             Structured Sales Growth Across Key Verticals
           </p>
-          {!hasUserInteracted && isAutoPlaying && (
+          {!hasUserInteracted && isAutoPlaying && !showAllIndustries && (
             <p
               style={{
                 fontFamily: 'Inter',
@@ -243,7 +244,7 @@ const RevenueProjectionSlide: React.FC<RevenueProjectionSlideProps> = ({ onNext,
                 transition: 'opacity 0.5s ease',
               }}
             >
-              💡 Hover over the chart to explore each year&apos;s revenue breakdown
+              💡 Click the chart to reveal all revenue streams | Hover to explore details
             </p>
           )}
         </div>
@@ -263,6 +264,11 @@ const RevenueProjectionSlide: React.FC<RevenueProjectionSlideProps> = ({ onNext,
             border: '2px solid rgba(164, 179, 255, 0.3)',
             borderRadius: 'clamp(16px, 1.5vw, 20px)',
             padding: 'clamp(32px, 3vh, 50px) clamp(32px, 3vw, 60px)',
+            cursor: 'pointer',
+          }}
+          onClick={() => {
+            setShowAllIndustries(true);
+            setHasUserInteracted(true);
           }}
           onMouseEnter={() => {
             setIsAutoPlaying(false);
@@ -342,24 +348,28 @@ const RevenueProjectionSlide: React.FC<RevenueProjectionSlideProps> = ({ onNext,
                 fill="url(#colorMobility)"
                 name="Mobility"
               />
-              <Area 
-                type="monotone" 
-                dataKey="government" 
-                stackId="1"
-                stroke="#FF6347" 
-                strokeWidth={3}
-                fill="url(#colorGovernment)"
-                name="Gov't"
-              />
-              <Area 
-                type="monotone" 
-                dataKey="insurance" 
-                stackId="1"
-                stroke="#FFB6C1" 
-                strokeWidth={3}
-                fill="url(#colorInsurance)"
-                name="Insurance/PI Firms"
-              />
+              {showAllIndustries && (
+                <>
+                  <Area 
+                    type="monotone" 
+                    dataKey="government" 
+                    stackId="1"
+                    stroke="#FF6347" 
+                    strokeWidth={3}
+                    fill="url(#colorGovernment)"
+                    name="Gov't"
+                  />
+                  <Area 
+                    type="monotone" 
+                    dataKey="insurance" 
+                    stackId="1"
+                    stroke="#FFB6C1" 
+                    strokeWidth={3}
+                    fill="url(#colorInsurance)"
+                    name="Insurance/PI Firms"
+                  />
+                </>
+              )}
             </AreaChart>
             
           </ResponsiveContainer>

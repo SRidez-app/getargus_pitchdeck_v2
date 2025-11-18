@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import Image from 'next/image';
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 
 interface TheAskSlideProps {
   onNext?: () => void;
@@ -24,34 +24,74 @@ const TheAskSlide: React.FC<TheAskSlideProps> = ({ onNext, onPrevious }) => {
 
   const objectives = [
     {
-      text: "Execute on pilots in motion. \"Chicken or Egg\""
-    },
-   
-    {
       text: "Invest in camera networks ahead of our growth to scale."
     }
   ];
 
-  // Coverage timeline data with color coding
-  // Gold (#FFCA2B) = New Coverage
-  // Navy Blue (#14004C) = Existing Coverage
-  const coverageData = [
-    {
-      year: '2025',
-      newStates: ['GA', 'NV'],
-      existingStates: []
-    },
-    {
-      year: '2026',
-      newStates: ['FL', 'NY', 'MI', 'CA', 'NJ', 'TN', 'AL', 'AR', 'MS', 'NE'],
-      existingStates: ['GA', 'NV']
-    },
-    {
-      year: '2027',
-      newStates: ['MN', 'SC', 'VA', 'MD', 'RI', 'CT', 'VT', 'ME', 'NH', 'PA', 'KY', 'HI', 'WA', 'IL', 'IN', 'WI'],
-      existingStates: ['GA', 'NV', 'FL', 'NY', 'MI', 'CA', 'NJ', 'TN', 'AL', 'AR', 'MS', 'NE']
-    }
+  // Pre-Seed funding allocation
+  const preSeedData = [
+    { name: 'AI Dev. / Modeling Training', value: 90, color: '#FF6347' },
+    { name: 'Marketing/Sales', value: 10, color: '#FFCA2B' }
   ];
+
+  // Bridge Round funding allocation
+  const bridgeRoundData = [
+    { name: 'Marketing/Sales', value: 45, color: '#FFCA2B' },
+    { name: 'AI Dev. / Modeling Training', value: 35, color: '#FF6347' },
+    { name: "Gov't Relations", value: 20, color: '#A4B3FF' }
+  ];
+
+  const RADIAN = Math.PI / 180;
+  const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }: any) => {
+    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+    return (
+      <text 
+        x={x} 
+        y={y} 
+        fill="white" 
+        textAnchor={x > cx ? 'start' : 'end'} 
+        dominantBaseline="central"
+        style={{
+          fontSize: 'clamp(16px, 1.4vw, 20px)',
+          fontWeight: 700,
+          fontFamily: 'Inter',
+        }}
+      >
+        {`${(percent * 100).toFixed(0)}%`}
+      </text>
+    );
+  };
+
+  const CustomTooltip = ({ active, payload }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div
+          style={{
+            backgroundColor: 'rgba(0, 0, 0, 0.95)',
+            border: '2px solid #FFCA2B',
+            borderRadius: '12px',
+            padding: '12px 16px',
+            fontFamily: 'Inter',
+          }}
+        >
+          <p
+            style={{
+              color: payload[0].payload.color,
+              fontWeight: 600,
+              fontSize: 'clamp(14px, 1.2vw, 16px)',
+              margin: 0,
+            }}
+          >
+            {payload[0].name}: {payload[0].value}%
+          </p>
+        </div>
+      );
+    }
+    return null;
+  };
 
   return (
     <div 
@@ -89,7 +129,7 @@ const TheAskSlide: React.FC<TheAskSlideProps> = ({ onNext, onPrevious }) => {
           opacity: 0.6,
         }}
       >
-        11
+        14
       </div>
 
       {/* Content Container */}
@@ -172,7 +212,7 @@ const TheAskSlide: React.FC<TheAskSlideProps> = ({ onNext, onPrevious }) => {
           className="w-full flex flex-col"
           style={{
             gap: 'clamp(20px, 2.5vh, 32px)',
-            marginBottom: 'clamp(48px, 6vh, 72px)',
+            marginBottom: 'clamp(56px, 7vh, 80px)',
           }}
         >
           {objectives.map((objective, index) => (
@@ -190,31 +230,17 @@ const TheAskSlide: React.FC<TheAskSlideProps> = ({ onNext, onPrevious }) => {
                 boxShadow: '0px 4px 14px 0px #00000040',
               }}
             >
-              {/* Bullet Point Icon */}
+              {/* Bullet Point */}
               <div 
                 style={{ 
                   flexShrink: 0, 
-                  width: 'clamp(32px, 2.5vw, 40px)', 
-                  height: 'clamp(32px, 2.5vw, 40px)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginTop: 'clamp(4px, 0.5vh, 8px)',
+                  width: 'clamp(12px, 1.2vw, 16px)', 
+                  height: 'clamp(12px, 1.2vw, 16px)',
+                  borderRadius: '50%',
+                  background: '#FFCA2B',
+                  marginTop: 'clamp(8px, 1vh, 12px)',
                 }}
-              >
-                <Image
-                  src="/double_arrow.png"
-                  alt="Bullet point"
-                  width={40}
-                  height={40}
-                  style={{ 
-                    width: '100%', 
-                    height: 'auto', 
-                    objectFit: 'contain',
-                    filter: 'brightness(0) saturate(100%) invert(81%) sepia(68%) saturate(543%) hue-rotate(359deg) brightness(103%) contrast(101%)',
-                  }}
-                />
-              </div>
+              />
               
               {/* Objective Text */}
               <p 
@@ -234,7 +260,7 @@ const TheAskSlide: React.FC<TheAskSlideProps> = ({ onNext, onPrevious }) => {
           ))}
         </div>
 
-        {/* Coverage Maps Section */}
+        {/* Funding Allocation Section */}
         <div className="w-full">
           <h3
             style={{
@@ -247,234 +273,154 @@ const TheAskSlide: React.FC<TheAskSlideProps> = ({ onNext, onPrevious }) => {
               marginBottom: 'clamp(32px, 4vh, 48px)',
             }}
           >
-            Geographic Expansion Timeline:
+            Funding Allocation:
           </h3>
 
-          {/* Coverage Cards Grid */}
+          {/* Pie Charts Container */}
           <div 
-            className="grid grid-cols-1 md:grid-cols-3 w-full"
+            className="grid grid-cols-2 w-full"
             style={{
-              gap: 'clamp(24px, 3vw, 48px)',
-            }}
-          >
-            {coverageData.map((data, index) => (
-              <div
-                key={index}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'flex-start',
-                  padding: 'clamp(24px, 2.5vh, 36px)',
-                  borderRadius: 'clamp(16px, 1.5vw, 20px)',
-                  border: '2px solid #A4B3FF',
-                  background: 'linear-gradient(107.56deg, #000000 37.5%, #14004C 100%), linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2))',
-                  boxShadow: '0px 4px 14px 0px #00000040',
-                }}
-              >
-                {/* Year Label */}
-                <h4
-                  style={{
-                    fontFamily: 'Inter, var(--font-inter)',
-                    fontWeight: 600,
-                    fontSize: 'clamp(28px, 2.5vw, 36px)',
-                    color: '#FFCA2B',
-                    marginBottom: 'clamp(20px, 2.5vh, 28px)',
-                  }}
-                >
-                  {data.year}
-                </h4>
-
-                {/* New Coverage Section */}
-                {data.newStates.length > 0 && (
-                  <div style={{ marginBottom: 'clamp(20px, 2.5vh, 28px)', width: '100%' }}>
-                    <div 
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 'clamp(8px, 1vw, 12px)',
-                        marginBottom: 'clamp(12px, 1.5vh, 16px)',
-                      }}
-                    >
-                      <div
-                        style={{
-                          width: 'clamp(16px, 1.5vw, 20px)',
-                          height: 'clamp(16px, 1.5vw, 20px)',
-                          background: '#FFCA2B',
-                          borderRadius: '3px',
-                          flexShrink: 0,
-                        }}
-                      />
-                      <span
-                        style={{
-                          fontFamily: 'Apercu Pro',
-                          fontWeight: 500,
-                          fontSize: 'clamp(16px, 1.6vw, 20px)',
-                          color: '#FFCA2B',
-                        }}
-                      >
-                        New Coverage
-                      </span>
-                    </div>
-                    <div
-                      style={{
-                        display: 'flex',
-                        flexWrap: 'wrap',
-                        gap: 'clamp(8px, 1vw, 12px)',
-                      }}
-                    >
-                      {data.newStates.map((state, idx) => (
-                        <span
-                          key={idx}
-                          style={{
-                            fontFamily: 'Apercu Pro',
-                            fontWeight: 500,
-                            fontSize: 'clamp(14px, 1.4vw, 18px)',
-                            color: '#FFCA2B',
-                            padding: 'clamp(4px, 0.5vh, 6px) clamp(10px, 1vw, 14px)',
-                            background: 'rgba(255, 202, 43, 0.15)',
-                            borderRadius: 'clamp(6px, 0.8vw, 8px)',
-                            border: '1px solid #FFCA2B',
-                          }}
-                        >
-                          {state}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Existing Coverage Section */}
-                {data.existingStates.length > 0 && (
-                  <div style={{ width: '100%' }}>
-                    <div 
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 'clamp(8px, 1vw, 12px)',
-                        marginBottom: 'clamp(12px, 1.5vh, 16px)',
-                      }}
-                    >
-                      <div
-                        style={{
-                          width: 'clamp(16px, 1.5vw, 20px)',
-                          height: 'clamp(16px, 1.5vw, 20px)',
-                          background: '#14004C',
-                          borderRadius: '3px',
-                          border: '1px solid #A4B3FF',
-                          flexShrink: 0,
-                        }}
-                      />
-                      <span
-                        style={{
-                          fontFamily: 'Apercu Pro',
-                          fontWeight: 500,
-                          fontSize: 'clamp(16px, 1.6vw, 20px)',
-                          color: '#A4B3FF',
-                        }}
-                      >
-                        Existing Coverage
-                      </span>
-                    </div>
-                    <div
-                      style={{
-                        display: 'flex',
-                        flexWrap: 'wrap',
-                        gap: 'clamp(8px, 1vw, 12px)',
-                      }}
-                    >
-                      {data.existingStates.map((state, idx) => (
-                        <span
-                          key={idx}
-                          style={{
-                            fontFamily: 'Apercu Pro',
-                            fontWeight: 500,
-                            fontSize: 'clamp(14px, 1.4vw, 18px)',
-                            color: '#A4B3FF',
-                            padding: 'clamp(4px, 0.5vh, 6px) clamp(10px, 1vw, 14px)',
-                            background: 'rgba(164, 179, 255, 0.15)',
-                            borderRadius: 'clamp(6px, 0.8vw, 8px)',
-                            border: '1px solid #A4B3FF',
-                          }}
-                        >
-                          {state}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Total State Count */}
-                <div
-                  style={{
-                    width: '100%',
-                    marginTop: 'clamp(20px, 2.5vh, 28px)',
-                    paddingTop: 'clamp(16px, 2vh, 20px)',
-                    borderTop: '1px solid rgba(164, 179, 255, 0.3)',
-                  }}
-                >
-                  <p
-                    style={{
-                      fontFamily: 'Inter, var(--font-inter)',
-                      fontWeight: 600,
-                      fontSize: 'clamp(16px, 1.6vw, 20px)',
-                      color: '#FFFFFF',
-                      textAlign: 'center',
-                    }}
-                  >
-                    Total: {data.newStates.length + data.existingStates.length} States
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Legend */}
-          <div 
-            className="flex items-center justify-center w-full"
-            style={{
-              marginTop: 'clamp(40px, 5vh, 56px)',
               gap: 'clamp(32px, 4vw, 64px)',
             }}
           >
-            <div className="flex items-center" style={{ gap: 'clamp(8px, 1vw, 12px)' }}>
-              <div
+            {/* Pre-Seed Chart */}
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                padding: 'clamp(32px, 3vh, 48px) clamp(24px, 2.5vw, 40px)',
+                borderRadius: 'clamp(16px, 1.5vw, 20px)',
+                border: '2px solid #A4B3FF',
+                background: 'linear-gradient(107.56deg, #000000 37.5%, #14004C 100%), linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2))',
+                boxShadow: '0px 4px 14px 0px #00000040',
+              }}
+            >
+              <h4
                 style={{
-                  width: 'clamp(20px, 2vw, 28px)',
-                  height: 'clamp(20px, 2vw, 28px)',
-                  background: '#FFCA2B',
-                  borderRadius: '4px',
-                }}
-              />
-              <span
-                style={{
-                  fontFamily: 'Apercu Pro',
-                  fontSize: 'clamp(14px, 1.4vw, 18px)',
+                  fontFamily: 'Inter, var(--font-inter)',
+                  fontWeight: 600,
+                  fontSize: 'clamp(24px, 2.2vw, 32px)',
                   color: '#FFFFFF',
+                  marginBottom: 'clamp(8px, 1vh, 12px)',
+                  textAlign: 'center',
                 }}
               >
-                New Coverage
-              </span>
+                $350k Pre-Seed
+              </h4>
+              <p
+                style={{
+                  fontFamily: 'Apercu Pro',
+                  fontSize: 'clamp(14px, 1.3vw, 18px)',
+                  color: 'rgba(255, 255, 255, 0.7)',
+                  marginBottom: 'clamp(24px, 3vh, 32px)',
+                  textAlign: 'center',
+                }}
+              >
+                Previous Funding Allocation
+              </p>
+              
+              <ResponsiveContainer width="100%" height={400}>
+                <PieChart>
+                  <Pie
+                    data={preSeedData}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={renderCustomizedLabel}
+                    outerRadius={140}
+                    fill="#8884d8"
+                    dataKey="value"
+                  >
+                    {preSeedData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip content={<CustomTooltip />} />
+                  <Legend 
+                    verticalAlign="bottom" 
+                    height={80}
+                    wrapperStyle={{
+                      fontFamily: 'Inter',
+                      fontSize: 'clamp(13px, 1.2vw, 16px)',
+                      fontWeight: 500,
+                      paddingTop: '20px',
+                    }}
+                    iconType="square"
+                    iconSize={12}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
             </div>
 
-            <div className="flex items-center" style={{ gap: 'clamp(8px, 1vw, 12px)' }}>
-              <div
+            {/* Bridge Round Chart */}
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                padding: 'clamp(32px, 3vh, 48px) clamp(24px, 2.5vw, 40px)',
+                borderRadius: 'clamp(16px, 1.5vw, 20px)',
+                border: '2px solid #FFCA2B',
+                background: 'linear-gradient(107.56deg, #000000 37.5%, #14004C 100%), linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2))',
+                boxShadow: '0px 4px 14px 0px #00000040',
+              }}
+            >
+              <h4
                 style={{
-                  width: 'clamp(20px, 2vw, 28px)',
-                  height: 'clamp(20px, 2vw, 28px)',
-                  background: '#14004C',
-                  borderRadius: '4px',
-                  border: '1px solid #A4B3FF',
-                }}
-              />
-              <span
-                style={{
-                  fontFamily: 'Apercu Pro',
-                  fontSize: 'clamp(14px, 1.4vw, 18px)',
-                  color: '#FFFFFF',
+                  fontFamily: 'Inter, var(--font-inter)',
+                  fontWeight: 600,
+                  fontSize: 'clamp(24px, 2.2vw, 32px)',
+                  color: '#FFCA2B',
+                  marginBottom: 'clamp(8px, 1vh, 12px)',
+                  textAlign: 'center',
                 }}
               >
-                Existing Coverage
-              </span>
+                $500k Bridge Round
+              </h4>
+              <p
+                style={{
+                  fontFamily: 'Apercu Pro',
+                  fontSize: 'clamp(14px, 1.3vw, 18px)',
+                  color: 'rgba(255, 255, 255, 0.7)',
+                  marginBottom: 'clamp(24px, 3vh, 32px)',
+                  textAlign: 'center',
+                }}
+              >
+                Proposed Funding Allocation
+              </p>
+              
+              <ResponsiveContainer width="100%" height={400}>
+                <PieChart>
+                  <Pie
+                    data={bridgeRoundData}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={renderCustomizedLabel}
+                    outerRadius={140}
+                    fill="#8884d8"
+                    dataKey="value"
+                  >
+                    {bridgeRoundData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip content={<CustomTooltip />} />
+                  <Legend 
+                    verticalAlign="bottom" 
+                    height={80}
+                    wrapperStyle={{
+                      fontFamily: 'Inter',
+                      fontSize: 'clamp(13px, 1.2vw, 16px)',
+                      fontWeight: 500,
+                      paddingTop: '20px',
+                    }}
+                    iconType="square"
+                    iconSize={12}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
             </div>
           </div>
         </div>

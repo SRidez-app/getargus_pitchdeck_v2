@@ -27,23 +27,6 @@ const UnitEconomicsSlide: React.FC<UnitEconomicsSlideProps> = ({ onNext, onPrevi
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onNext, onPrevious]);
 
-  useEffect(() => {
-    const updateScale = () => {
-      const designWidth = 1920;  // Figma canvas width
-      const designHeight = 1080; // Figma canvas height
-      
-      const scaleX = window.innerWidth / designWidth;
-      const scaleY = window.innerHeight / designHeight;
-      const newScale = Math.min(scaleX, scaleY, 1); // Cap at 1 to avoid upscaling
-      
-      setScale(newScale);
-    };
-
-    updateScale();
-    window.addEventListener('resize', updateScale);
-    return () => window.removeEventListener('resize', updateScale);
-  }, []);
-
   // Werner Model (per state, ~2500 cameras)
   const camerasPerState = 2500;
   const alertsPerCamera = 5; // per month
@@ -84,12 +67,11 @@ const UnitEconomicsSlide: React.FC<UnitEconomicsSlideProps> = ({ onNext, onPrevi
   ];
 
   // Multi-client scenarios (shared camera networks)
-  // Revenue = Clients × (Cameras ÷ 10K) × $360K per 10K camera segment
   const revenuePerClient = 360000; // Annual revenue for 10K cameras
   const multiClient = [
-    { clients: 5, cameras: 50000, annualRevenue: 5 * 5 * revenuePerClient },      // 5 clients × 5 (10K groups) × $360K = $9M
-    { clients: 10, cameras: 100000, annualRevenue: 10 * 10 * revenuePerClient },  // 10 × 10 × $360K = $36M
-    { clients: 25, cameras: 250000, annualRevenue: 25 * 25 * revenuePerClient },  // 25 × 25 × $360K = $225M
+    { clients: 5, cameras: 50000, annualRevenue: 5 * 5 * revenuePerClient },
+    { clients: 10, cameras: 100000, annualRevenue: 10 * 10 * revenuePerClient },
+    { clients: 25, cameras: 250000, annualRevenue: 25 * 25 * revenuePerClient },
   ];
 
   const formatCurrency = (value: number, compact: boolean = false) => {
@@ -122,123 +104,140 @@ const UnitEconomicsSlide: React.FC<UnitEconomicsSlideProps> = ({ onNext, onPrevi
         className="fixed bottom-8 right-8 text-white z-50"
         style={{
           fontFamily: 'var(--font-inter)',
-          fontSize: '14px',
+          fontSize: 'clamp(12px, 1.2vw, 14px)',
           fontWeight: 400,
           opacity: 0.6,
         }}
       >
-        9
+        11
       </div>
 
       {/* Scaling wrapper */}
       <div 
-        style={{ 
-          transform: `scale(${scale})`,
-          transformOrigin: 'center center',
-          width: '1920px',
-          height: '1080px',
-          position: 'relative',
+        className="relative w-full h-full flex flex-col overflow-y-auto"
+        style={{
+          padding: 'clamp(32px, 4vh, 64px) clamp(48px, 5vw, 96px)',
+          scrollbarWidth: 'thin',
+          scrollbarColor: 'rgba(255, 202, 43, 0.3) transparent',
+          maxWidth: '1920px',
+          margin: '0 auto',
           opacity: isVisible ? 1 : 0,
           transition: 'opacity 1s ease',
         }}
       >
-        {/* Content Container */}
-        <div className="relative w-full h-full flex flex-col items-start justify-start px-24 pt-16 pb-16">
-          {/* Title Section */}
-          <div className="mb-12">
-            <div
-              style={{
-                width: 'fit-content',
-                paddingTop: '8px',
-                paddingBottom: '8px',
-                marginBottom: '32px',
-              }}
-            >
-              <h2 
-                className="text-white"
-                style={{
-                  fontFamily: 'Inter, var(--font-inter)',
-                  fontWeight: 600,
-                  fontSize: '36px',
-                  lineHeight: '44px',
-                  letterSpacing: '0.02em',
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                UNIT ECONOMICS
-              </h2>
-              <div 
-                style={{
-                  borderBottom: '3px solid #FFCA2B',
-                  width: '100%',
-                  marginTop: '8px',
-                }}
-              />
-            </div>
-            
-            <h1 
-              style={{
-                fontFamily: 'Tobias',
-                fontWeight: 500,
-                fontSize: '64px',
-                lineHeight: '76px',
-                letterSpacing: '0px',
-                color: '#FFFFFF',
-                marginBottom: '8px',
-              }}
-            >
-              Scalable Model with{' '}
-              <span style={{ color: '#FFCA2B' }}>Exponential Growth</span>
-            </h1>
-            <p
-              style={{
-                fontFamily: 'Apercu Pro',
-                fontSize: '22px',
-                fontWeight: 400,
-                lineHeight: '1.5',
-                color: 'rgba(255, 255, 255, 0.8)',
-              }}
-            >
-              From single-client economics to multi-client compounding
-            </p>
-          </div>
+        <style jsx>{`
+          div::-webkit-scrollbar {
+            width: 8px;
+          }
+          div::-webkit-scrollbar-track {
+            background: transparent;
+          }
+          div::-webkit-scrollbar-thumb {
+            background: rgba(255, 202, 43, 0.3);
+            border-radius: 4px;
+          }
+          div::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 202, 43, 0.5);
+          }
+        `}</style>
 
-          {/* Three Cards Side by Side */}
-          <div 
-            className="flex justify-between items-stretch w-full"
+        {/* Title Section */}
+        <div style={{ marginBottom: 'clamp(32px, 4vh, 48px)' }}>
+          <div
             style={{
-              gap: '32px',
-              maxWidth: '1680px',
+              width: 'fit-content',
+              paddingTop: 'clamp(6px, 0.8vh, 8px)',
+              paddingBottom: 'clamp(6px, 0.8vh, 8px)',
+              marginBottom: 'clamp(24px, 3vh, 32px)',
             }}
           >
+            <h2 
+              className="text-white"
+              style={{
+                fontFamily: 'Inter, var(--font-inter)',
+                fontWeight: 600,
+                fontSize: 'clamp(28px, 2.5vw, 36px)',
+                lineHeight: '1.3',
+                letterSpacing: '0.02em',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              UNIT ECONOMICS
+            </h2>
+            <div 
+              style={{
+                borderBottom: '3px solid #FFCA2B',
+                width: '100%',
+                marginTop: 'clamp(6px, 0.8vh, 8px)',
+              }}
+            />
+          </div>
+          
+          <h1 
+            style={{
+              fontFamily: 'Tobias',
+              fontWeight: 500,
+              fontSize: 'clamp(40px, 4.5vw, 64px)',
+              lineHeight: '1.3',
+              letterSpacing: '0px',
+              color: '#FFFFFF',
+              marginBottom: 'clamp(8px, 1vh, 12px)',
+            }}
+          >
+            Scalable Model with{' '}
+            <span style={{ color: '#FFCA2B' }}>Exponential Growth</span>
+          </h1>
+          <p
+            style={{
+              fontFamily: 'Apercu Pro',
+              fontSize: 'clamp(16px, 1.6vw, 22px)',
+              fontWeight: 400,
+              lineHeight: '1.5',
+              color: 'rgba(255, 255, 255, 0.8)',
+            }}
+          >
+            From single-client economics to multi-client compounding
+          </p>
+        </div>
+
+        {/* Three Cards Side by Side */}
+        <div 
+          className="flex-1"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: 'clamp(20px, 2vw, 32px)',
+            alignItems: 'stretch',
+          }}
+        >
           {/* Werner Model Card */}
           <div
             style={{
               background: 'rgba(0, 0, 0, 0.4)',
               border: '2px solid rgba(255, 202, 43, 0.5)',
-              borderRadius: '20px',
-              padding: '28px',
-              flex: '1',
-              minWidth: '520px',
+              borderRadius: 'clamp(12px, 1.5vw, 20px)',
+              padding: 'clamp(20px, 2.5vh, 28px)',
+              display: 'flex',
+              flexDirection: 'column',
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'clamp(8px, 1vw, 12px)', marginBottom: 'clamp(16px, 2vh, 20px)' }}>
               <div
                 style={{
                   background: '#FFCA2B',
-                  borderRadius: '8px',
-                  padding: '8px',
+                  borderRadius: 'clamp(6px, 0.8vw, 8px)',
+                  padding: 'clamp(6px, 0.8vw, 8px)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}
               >
-                <DollarSign size={24} color="#000" strokeWidth={3} />
+                <DollarSign size={24} color="#000" strokeWidth={3} style={{ width: 'clamp(20px, 2vw, 24px)', height: 'clamp(20px, 2vw, 24px)' }} />
               </div>
               <h3
                 style={{
                   fontFamily: 'Inter',
-                  fontSize: '26px',
+                  fontSize: 'clamp(20px, 2vw, 26px)',
                   fontWeight: 700,
                   color: '#FFCA2B',
                 }}
@@ -247,45 +246,45 @@ const UnitEconomicsSlide: React.FC<UnitEconomicsSlideProps> = ({ onNext, onPrevi
               </h3>
             </div>
 
-            <div style={{ fontFamily: 'Inter', fontSize: '15px', color: '#FFF' }}>
+            <div style={{ fontFamily: 'Inter', fontSize: 'clamp(13px, 1.2vw, 15px)' }}>
               <div style={{ 
                 background: 'rgba(255, 202, 43, 0.1)', 
-                padding: '16px', 
-                borderRadius: '12px',
-                marginBottom: '16px',
+                padding: 'clamp(12px, 1.5vh, 16px)', 
+                borderRadius: 'clamp(8px, 1vw, 12px)',
+                marginBottom: 'clamp(12px, 1.5vh, 16px)',
                 border: '1px solid rgba(255, 202, 43, 0.3)'
               }}>
-                <p style={{ fontWeight: 600, color: '#FFCA2B', marginBottom: '12px', fontSize: '16px' }}>Per State (~2,500 cameras)</p>
-                <div style={{ display: 'grid', gap: '8px' }}>
+                <p style={{ fontWeight: 600, color: '#FFCA2B', marginBottom: 'clamp(8px, 1vh, 12px)', fontSize: 'clamp(14px, 1.3vw, 16px)' }}>Per State (~2,500 cameras)</p>
+                <div style={{ display: 'grid', gap: 'clamp(6px, 0.8vh, 8px)' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <span style={{ color: 'rgba(255, 255, 255, 0.7)' }}>Setup Cost:</span>
-                    <span style={{ fontWeight: 600 }}>{formatCurrency(wernerModel.setupCost)}</span>
+                    <span style={{ fontWeight: 600, color: '#FFF' }}>{formatCurrency(wernerModel.setupCost)}</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <span style={{ color: 'rgba(255, 255, 255, 0.7)' }}>Monthly Flat Rate:</span>
-                    <span style={{ fontWeight: 600 }}>{formatCurrency(wernerModel.monthlyFlat)}</span>
+                    <span style={{ fontWeight: 600, color: '#FFF' }}>{formatCurrency(wernerModel.monthlyFlat)}</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <span style={{ color: 'rgba(255, 255, 255, 0.7)' }}>Alerts/Month:</span>
-                    <span style={{ fontWeight: 600 }}>{formatNumber(wernerModel.alertsPerMonth)}</span>
+                    <span style={{ fontWeight: 600, color: '#FFF' }}>{formatNumber(wernerModel.alertsPerMonth)}</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <span style={{ color: 'rgba(255, 255, 255, 0.7)' }}>Per Alert:</span>
-                    <span style={{ fontWeight: 600 }}>{formatCurrency(wernerModel.pricePerAlert)}</span>
+                    <span style={{ fontWeight: 600, color: '#FFF' }}>{formatCurrency(wernerModel.pricePerAlert)}</span>
                   </div>
                 </div>
               </div>
 
               <div style={{ 
                 borderTop: '2px solid #FFCA2B', 
-                paddingTop: '16px',
-                marginTop: '16px'
+                paddingTop: 'clamp(12px, 1.5vh, 16px)',
+                marginTop: 'clamp(12px, 1.5vh, 16px)'
               }}>
-                <div style={{ display: 'grid', gap: '12px' }}>
+                <div style={{ display: 'grid', gap: 'clamp(8px, 1vh, 12px)' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontSize: '17px', fontWeight: 600 }}>Monthly Revenue:</span>
+                    <span style={{ fontSize: 'clamp(15px, 1.4vw, 17px)', fontWeight: 600, color: '#FFF' }}>Monthly Revenue:</span>
                     <span style={{ 
-                      fontSize: '22px', 
+                      fontSize: 'clamp(18px, 1.8vw, 22px)', 
                       fontWeight: 700,
                       color: '#FFCA2B'
                     }}>
@@ -293,9 +292,9 @@ const UnitEconomicsSlide: React.FC<UnitEconomicsSlideProps> = ({ onNext, onPrevi
                     </span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontSize: '17px', fontWeight: 600 }}>Annual Revenue:</span>
+                    <span style={{ fontSize: 'clamp(15px, 1.4vw, 17px)', fontWeight: 600, color: '#FFF' }}>Annual Revenue:</span>
                     <span style={{ 
-                      fontSize: '22px', 
+                      fontSize: 'clamp(18px, 1.8vw, 22px)', 
                       fontWeight: 700,
                       color: '#FFCA2B'
                     }}>
@@ -307,22 +306,22 @@ const UnitEconomicsSlide: React.FC<UnitEconomicsSlideProps> = ({ onNext, onPrevi
 
               <div style={{ 
                 background: 'rgba(164, 179, 255, 0.15)', 
-                padding: '16px', 
-                borderRadius: '12px',
-                marginTop: '16px',
+                padding: 'clamp(12px, 1.5vh, 16px)', 
+                borderRadius: 'clamp(8px, 1vw, 12px)',
+                marginTop: 'clamp(12px, 1.5vh, 16px)',
                 border: '1px solid rgba(164, 179, 255, 0.3)'
               }}>
-                <p style={{ fontWeight: 600, color: '#A4B3FF', marginBottom: '8px', fontSize: '16px' }}>Customer Value</p>
+                <p style={{ fontWeight: 600, color: '#A4B3FF', marginBottom: 'clamp(6px, 0.8vh, 8px)', fontSize: 'clamp(14px, 1.3vw, 16px)' }}>Customer Value</p>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <span style={{ color: 'rgba(255, 255, 255, 0.7)' }}>Monthly Savings:</span>
-                  <span style={{ fontWeight: 700, color: '#A4B3FF', fontSize: '18px' }}>
+                  <span style={{ fontWeight: 700, color: '#A4B3FF', fontSize: 'clamp(16px, 1.5vw, 18px)' }}>
                     {formatCurrency(wernerModel.customerSavings)}
                   </span>
                 </div>
                 <div style={{ 
-                  fontSize: '13px', 
+                  fontSize: 'clamp(11px, 1vw, 13px)', 
                   color: 'rgba(255, 255, 255, 0.6)', 
-                  marginTop: '8px',
+                  marginTop: 'clamp(6px, 0.8vh, 8px)',
                   fontStyle: 'italic'
                 }}>
                   ROI: Customer saves {formatCurrency(wernerModel.annualSavings)}/year
@@ -336,29 +335,29 @@ const UnitEconomicsSlide: React.FC<UnitEconomicsSlideProps> = ({ onNext, onPrevi
             style={{
               background: 'rgba(0, 0, 0, 0.4)',
               border: '2px solid rgba(164, 179, 255, 0.5)',
-              borderRadius: '20px',
-              padding: '28px',
-              flex: '1',
-              minWidth: '520px',
+              borderRadius: 'clamp(12px, 1.5vw, 20px)',
+              padding: 'clamp(20px, 2.5vh, 28px)',
+              display: 'flex',
+              flexDirection: 'column',
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'clamp(8px, 1vw, 12px)', marginBottom: 'clamp(16px, 2vh, 20px)' }}>
               <div
                 style={{
                   background: 'rgba(164, 179, 255, 0.3)',
-                  borderRadius: '8px',
-                  padding: '8px',
+                  borderRadius: 'clamp(6px, 0.8vw, 8px)',
+                  padding: 'clamp(6px, 0.8vw, 8px)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}
               >
-                <Camera size={24} color="#A4B3FF" strokeWidth={2.5} />
+                <Camera size={24} color="#A4B3FF" strokeWidth={2.5} style={{ width: 'clamp(20px, 2vw, 24px)', height: 'clamp(20px, 2vw, 24px)' }} />
               </div>
               <h3
                 style={{
                   fontFamily: 'Inter',
-                  fontSize: '26px',
+                  fontSize: 'clamp(20px, 2vw, 26px)',
                   fontWeight: 700,
                   color: '#A4B3FF',
                 }}
@@ -367,15 +366,15 @@ const UnitEconomicsSlide: React.FC<UnitEconomicsSlideProps> = ({ onNext, onPrevi
               </h3>
             </div>
 
-            <div style={{ fontFamily: 'Inter', fontSize: '15px' }}>
+            <div style={{ fontFamily: 'Inter', fontSize: 'clamp(13px, 1.2vw, 15px)' }}>
               {cameraScaling.map((scenario, idx) => (
                 <div
                   key={idx}
                   style={{
                     background: idx % 2 === 0 ? 'rgba(255, 255, 255, 0.05)' : 'transparent',
-                    padding: '16px',
-                    borderRadius: '12px',
-                    marginBottom: idx < cameraScaling.length - 1 ? '12px' : '0',
+                    padding: 'clamp(12px, 1.5vh, 16px)',
+                    borderRadius: 'clamp(8px, 1vw, 12px)',
+                    marginBottom: idx < cameraScaling.length - 1 ? 'clamp(10px, 1.2vh, 12px)' : '0',
                     border: '1px solid rgba(164, 179, 255, 0.2)',
                   }}
                 >
@@ -383,28 +382,28 @@ const UnitEconomicsSlide: React.FC<UnitEconomicsSlideProps> = ({ onNext, onPrevi
                     display: 'flex', 
                     justifyContent: 'space-between',
                     alignItems: 'center',
-                    marginBottom: '12px'
+                    marginBottom: 'clamp(8px, 1vh, 12px)'
                   }}>
                     <div>
                       <div style={{ 
-                        fontSize: '22px', 
+                        fontSize: 'clamp(18px, 1.8vw, 22px)', 
                         fontWeight: 700,
                         color: '#FFCA2B'
                       }}>
                         {formatNumber(scenario.cameras)}
                       </div>
                       <div style={{ 
-                        fontSize: '13px', 
+                        fontSize: 'clamp(11px, 1vw, 13px)', 
                         color: 'rgba(255, 255, 255, 0.6)',
                         fontWeight: 500
                       }}>
                         cameras (~{scenario.states} states)
                       </div>
                     </div>
-                    <TrendingUp size={28} color="#FFCA2B" strokeWidth={2.5} />
+                    <TrendingUp size={28} color="#FFCA2B" strokeWidth={2.5} style={{ width: 'clamp(24px, 2.2vw, 28px)', height: 'clamp(24px, 2.2vw, 28px)' }} />
                   </div>
 
-                  <div style={{ display: 'grid', gap: '6px', color: '#FFF' }}>
+                  <div style={{ display: 'grid', gap: 'clamp(4px, 0.6vh, 6px)', color: '#FFF' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                       <span style={{ color: 'rgba(255, 255, 255, 0.7)' }}>Monthly Alerts:</span>
                       <span style={{ fontWeight: 600 }}>{formatNumber(scenario.alerts)}</span>
@@ -418,13 +417,13 @@ const UnitEconomicsSlide: React.FC<UnitEconomicsSlideProps> = ({ onNext, onPrevi
                     <div style={{ 
                       display: 'flex', 
                       justifyContent: 'space-between',
-                      paddingTop: '8px',
+                      paddingTop: 'clamp(6px, 0.8vh, 8px)',
                       borderTop: '1px solid rgba(255, 202, 43, 0.3)',
-                      marginTop: '4px'
+                      marginTop: 'clamp(3px, 0.4vh, 4px)'
                     }}>
                       <span style={{ fontWeight: 600 }}>Annual Revenue:</span>
                       <span style={{ 
-                        fontSize: '18px',
+                        fontSize: 'clamp(16px, 1.5vw, 18px)',
                         fontWeight: 700,
                         color: '#FFCA2B'
                       }}>
@@ -442,29 +441,29 @@ const UnitEconomicsSlide: React.FC<UnitEconomicsSlideProps> = ({ onNext, onPrevi
             style={{
               background: 'rgba(0, 0, 0, 0.4)',
               border: '2px solid rgba(255, 107, 107, 0.5)',
-              borderRadius: '20px',
-              padding: '28px',
-              flex: '1',
-              minWidth: '520px',
+              borderRadius: 'clamp(12px, 1.5vw, 20px)',
+              padding: 'clamp(20px, 2.5vh, 28px)',
+              display: 'flex',
+              flexDirection: 'column',
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'clamp(8px, 1vw, 12px)', marginBottom: 'clamp(16px, 2vh, 20px)' }}>
               <div
                 style={{
                   background: 'rgba(255, 107, 107, 0.3)',
-                  borderRadius: '8px',
-                  padding: '8px',
+                  borderRadius: 'clamp(6px, 0.8vw, 8px)',
+                  padding: 'clamp(6px, 0.8vw, 8px)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}
               >
-                <Users size={24} color="#FF6B6B" strokeWidth={2.5} />
+                <Users size={24} color="#FF6B6B" strokeWidth={2.5} style={{ width: 'clamp(20px, 2vw, 24px)', height: 'clamp(20px, 2vw, 24px)' }} />
               </div>
               <h3
                 style={{
                   fontFamily: 'Inter',
-                  fontSize: '26px',
+                  fontSize: 'clamp(20px, 2vw, 26px)',
                   fontWeight: 700,
                   color: '#FF6B6B',
                 }}
@@ -475,36 +474,35 @@ const UnitEconomicsSlide: React.FC<UnitEconomicsSlideProps> = ({ onNext, onPrevi
 
             <p style={{
               fontFamily: 'Apercu Pro',
-              fontSize: '15px',
+              fontSize: 'clamp(13px, 1.2vw, 15px)',
               color: 'rgba(255, 255, 255, 0.8)',
-              marginBottom: '20px',
+              marginBottom: 'clamp(16px, 2vh, 20px)',
               lineHeight: '1.5'
             }}>
               Shared camera networks unlock exponential growth
             </p>
 
-            <div style={{ fontFamily: 'Inter', fontSize: '15px' }}>
+            <div style={{ fontFamily: 'Inter', fontSize: 'clamp(13px, 1.2vw, 15px)', flex: 1 }}>
               {multiClient.map((scenario, idx) => (
                 <div
                   key={idx}
                   style={{
                     background: 'rgba(255, 107, 107, 0.1)',
-                    padding: '20px',
-                    borderRadius: '12px',
-                    marginBottom: idx < multiClient.length - 1 ? '16px' : '0',
+                    padding: 'clamp(16px, 2vh, 20px)',
+                    borderRadius: 'clamp(8px, 1vw, 12px)',
+                    marginBottom: idx < multiClient.length - 1 ? 'clamp(12px, 1.5vh, 16px)' : '0',
                     border: '2px solid rgba(255, 107, 107, 0.3)',
-                    transition: 'all 0.3s ease',
                   }}
                 >
                   <div style={{ 
                     display: 'grid',
                     gridTemplateColumns: '1fr 1fr',
-                    gap: '16px',
+                    gap: 'clamp(12px, 1.5vw, 16px)',
                     alignItems: 'center'
                   }}>
                     <div>
                       <div style={{ 
-                        fontSize: '42px', 
+                        fontSize: 'clamp(32px, 3.5vw, 42px)', 
                         fontWeight: 700,
                         color: '#FF6B6B',
                         lineHeight: '1'
@@ -512,24 +510,24 @@ const UnitEconomicsSlide: React.FC<UnitEconomicsSlideProps> = ({ onNext, onPrevi
                         {scenario.clients}
                       </div>
                       <div style={{ 
-                        fontSize: '15px', 
+                        fontSize: 'clamp(13px, 1.2vw, 15px)', 
                         color: 'rgba(255, 255, 255, 0.7)',
                         fontWeight: 500,
-                        marginTop: '4px'
+                        marginTop: 'clamp(3px, 0.4vh, 4px)'
                       }}>
                         clients
                       </div>
                     </div>
                     <div style={{ textAlign: 'right' }}>
                       <div style={{ 
-                        fontSize: '13px', 
+                        fontSize: 'clamp(11px, 1vw, 13px)', 
                         color: 'rgba(255, 255, 255, 0.6)',
-                        marginBottom: '4px'
+                        marginBottom: 'clamp(3px, 0.4vh, 4px)'
                       }}>
                         {formatNumber(scenario.cameras)} cameras
                       </div>
                       <div style={{ 
-                        fontSize: '28px', 
+                        fontSize: 'clamp(22px, 2.2vw, 28px)', 
                         fontWeight: 700,
                         color: '#FFCA2B',
                         lineHeight: '1'
@@ -537,9 +535,9 @@ const UnitEconomicsSlide: React.FC<UnitEconomicsSlideProps> = ({ onNext, onPrevi
                         {formatCurrency(scenario.annualRevenue, true)}
                       </div>
                       <div style={{ 
-                        fontSize: '12px', 
+                        fontSize: 'clamp(10px, 0.95vw, 12px)', 
                         color: 'rgba(255, 255, 255, 0.5)',
-                        marginTop: '4px',
+                        marginTop: 'clamp(3px, 0.4vh, 4px)',
                         fontStyle: 'italic'
                       }}>
                         annual revenue
@@ -550,15 +548,15 @@ const UnitEconomicsSlide: React.FC<UnitEconomicsSlideProps> = ({ onNext, onPrevi
               ))}
 
               <div style={{
-                marginTop: '20px',
-                padding: '16px',
+                marginTop: 'clamp(16px, 2vh, 20px)',
+                padding: 'clamp(12px, 1.5vh, 16px)',
                 background: 'rgba(255, 202, 43, 0.15)',
-                borderRadius: '12px',
+                borderRadius: 'clamp(8px, 1vw, 12px)',
                 border: '1px solid rgba(255, 202, 43, 0.4)',
                 textAlign: 'center'
               }}>
                 <p style={{
-                  fontSize: '14px',
+                  fontSize: 'clamp(12px, 1.1vw, 14px)',
                   color: 'rgba(255, 255, 255, 0.9)',
                   fontWeight: 600,
                   lineHeight: '1.5'
@@ -571,7 +569,7 @@ const UnitEconomicsSlide: React.FC<UnitEconomicsSlideProps> = ({ onNext, onPrevi
         </div>
       </div>
     </div>
-  </div>
+  
   );
 };
 

@@ -31,7 +31,7 @@ const TamSlide: React.FC<TamSlideProps> = ({ onNext, onPrevious }) => {
       vertical: 'Mobility & Navigation',
       tam: 250,
       sam: 80,
-      som: 4,
+      som: 18,
       cagr: 15,
       icon: <TrendingUp size={48} strokeWidth={2.5} />,
       highlight: true,
@@ -41,17 +41,17 @@ const TamSlide: React.FC<TamSlideProps> = ({ onNext, onPrevious }) => {
       vertical: 'Auto Insurance',
       tam: 1400,
       sam: 250,
-      som: 2.5,
+      som: 13,
       cagr: 5,
       icon: <DollarSign size={48} strokeWidth={2.5} />,
       highlight: false,
       salesCycle: '6-18 months - POC dependent',
     },
     {
-      vertical: 'Government',
+      vertical: "Gov't Public Safety",
       tam: 30,
       sam: 15,
-      som: 0.5,
+      som: 2,
       cagr: 9,
       icon: <Target size={48} strokeWidth={2.5} />,
       highlight: false,
@@ -97,26 +97,26 @@ const TamSlide: React.FC<TamSlideProps> = ({ onNext, onPrevious }) => {
           opacity: 0.6,
         }}
       >
-        5
+        6
       </div>
 
-      {/* Content Container - NO SCALING WRAPPER */}
+      {/* Content Container */}
       <div 
         className="relative w-full h-full overflow-y-auto tam-scroll"
         style={{
-          padding: 'clamp(32px, 4vh, 64px) clamp(40px, 5vw, 80px)',
+          padding: 'clamp(24px, 3vh, 48px) clamp(32px, 4vw, 64px)',
           scrollbarWidth: 'thin',
           scrollbarColor: 'rgba(255, 202, 43, 0.3) transparent',
         }}
       >
-        {/* Title Section */}
-        <div style={{ marginBottom: 'clamp(32px, 4vh, 56px)' }}>
+        {/* Title Section - More Condensed */}
+        <div style={{ marginBottom: 'clamp(20px, 2.5vh, 36px)' }}>
           <div
             style={{
               width: 'fit-content',
-              paddingTop: '8px',
-              paddingBottom: '8px',
-              marginBottom: 'clamp(24px, 3vh, 40px)',
+              paddingTop: '6px',
+              paddingBottom: '6px',
+              marginBottom: 'clamp(16px, 2vh, 28px)',
             }}
           >
             <h2 
@@ -124,7 +124,7 @@ const TamSlide: React.FC<TamSlideProps> = ({ onNext, onPrevious }) => {
               style={{
                 fontFamily: 'Inter, var(--font-inter)',
                 fontWeight: 600,
-                fontSize: 'clamp(24px, 2vw, 36px)',
+                fontSize: 'clamp(20px, 1.8vw, 32px)',
                 lineHeight: '1.2',
                 letterSpacing: '0.02em',
                 whiteSpace: 'nowrap',
@@ -136,7 +136,7 @@ const TamSlide: React.FC<TamSlideProps> = ({ onNext, onPrevious }) => {
               style={{
                 borderBottom: '3px solid #FFCA2B',
                 width: '100%',
-                marginTop: '8px',
+                marginTop: '6px',
               }}
             />
           </div>
@@ -145,11 +145,11 @@ const TamSlide: React.FC<TamSlideProps> = ({ onNext, onPrevious }) => {
             style={{
               fontFamily: 'Tobias',
               fontWeight: 500,
-              fontSize: 'clamp(40px, 5vw, 96px)',
+              fontSize: 'clamp(32px, 4vw, 64px)',
               lineHeight: '1.1',
               letterSpacing: '0px',
               color: '#FFFFFF',
-              marginBottom: 'clamp(12px, 1.5vh, 20px)',
+              marginBottom: 'clamp(8px, 1vh, 14px)',
             }}
           >
             Global Market Opportunities
@@ -157,7 +157,7 @@ const TamSlide: React.FC<TamSlideProps> = ({ onNext, onPrevious }) => {
           <p
             style={{
               fontFamily: 'Apercu Pro',
-              fontSize: 'clamp(18px, 1.5vw, 28px)',
+              fontSize: 'clamp(16px, 1.3vw, 22px)',
               fontWeight: 400,
               color: 'rgba(255, 255, 255, 0.7)',
             }}
@@ -166,12 +166,12 @@ const TamSlide: React.FC<TamSlideProps> = ({ onNext, onPrevious }) => {
           </p>
         </div>
 
-        {/* Market Cards Grid */}
+        {/* Market Cards Grid - More Condensed */}
         <div 
-          className="grid gap-6"
+          className="grid gap-4"
           style={{
-            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-            marginBottom: 'clamp(48px, 6vh, 72px)',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            marginBottom: 'clamp(28px, 3.5vh, 48px)',
             maxWidth: '100%',
           }}
         >
@@ -180,20 +180,21 @@ const TamSlide: React.FC<TamSlideProps> = ({ onNext, onPrevious }) => {
               key={index}
               className="transition-all duration-1000"
               style={{
+                // OPTION 1: Gold background with black text for Mobility (highlighted card)
                 background: market.highlight 
-                  ? 'linear-gradient(135deg, rgba(255, 202, 43, 0.15) 0%, rgba(255, 202, 43, 0.05) 100%)'
+                  ? 'linear-gradient(135deg, #FFCA2B 0%, #F59E0B 100%)'
                   : 'rgba(255, 255, 255, 0.05)',
                 border: market.highlight 
-                  ? '3px solid rgba(255, 202, 43, 0.6)'
+                  ? '3px solid #FDE68A'
                   : '2px solid rgba(255, 255, 255, 0.2)',
-                borderRadius: 'clamp(16px, 1.5vw, 20px)',
-                padding: 'clamp(24px, 3vh, 40px)',
+                borderRadius: 'clamp(12px, 1.2vw, 16px)',
+                padding: 'clamp(20px, 2.5vh, 32px)',
                 opacity: isVisible ? 1 : 0,
                 transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
                 transitionDelay: `${index * 150 + 200}ms`,
                 position: 'relative',
                 boxShadow: market.highlight 
-                  ? '0 8px 32px rgba(255, 202, 43, 0.2)'
+                  ? '0 12px 40px rgba(255, 202, 43, 0.4), 0 0 80px rgba(255, 202, 43, 0.2)'
                   : 'none',
               }}
             >
@@ -201,14 +202,14 @@ const TamSlide: React.FC<TamSlideProps> = ({ onNext, onPrevious }) => {
               <div
                 style={{
                   position: 'absolute',
-                  top: 'clamp(16px, 2vh, 24px)',
-                  right: 'clamp(16px, 2vw, 24px)',
-                  background: '#FFCA2B',
-                  color: '#000000',
-                  padding: 'clamp(6px, 0.8vh, 8px) clamp(12px, 1.5vw, 16px)',
-                  borderRadius: '8px',
+                  top: 'clamp(12px, 1.5vh, 20px)',
+                  right: 'clamp(12px, 1.5vw, 20px)',
+                  background: market.highlight ? '#000000' : '#FFCA2B',
+                  color: market.highlight ? '#FFCA2B' : '#000000',
+                  padding: 'clamp(5px, 0.6vh, 7px) clamp(10px, 1.2vw, 14px)',
+                  borderRadius: '6px',
                   fontFamily: 'Inter, var(--font-inter)',
-                  fontSize: 'clamp(16px, 1.3vw, 20px)',
+                  fontSize: 'clamp(14px, 1.2vw, 18px)',
                   fontWeight: 700,
                 }}
               >
@@ -216,19 +217,23 @@ const TamSlide: React.FC<TamSlideProps> = ({ onNext, onPrevious }) => {
               </div>
 
               {/* Icon & Title */}
-              <div style={{ marginBottom: 'clamp(24px, 3vh, 32px)' }}>
+              <div style={{ marginBottom: 'clamp(18px, 2.2vh, 26px)' }}>
                 <div
                   style={{
-                    width: 'clamp(60px, 6vw, 80px)',
-                    height: 'clamp(60px, 6vw, 80px)',
-                    background: 'rgba(255, 202, 43, 0.2)',
-                    borderRadius: 'clamp(12px, 1.2vw, 16px)',
+                    width: 'clamp(50px, 5vw, 70px)',
+                    height: 'clamp(50px, 5vw, 70px)',
+                    background: market.highlight 
+                      ? 'rgba(0, 0, 0, 0.3)' 
+                      : 'rgba(255, 202, 43, 0.2)',
+                    borderRadius: 'clamp(10px, 1vw, 14px)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    marginBottom: 'clamp(16px, 2vh, 20px)',
-                    border: '2px solid rgba(255, 202, 43, 0.4)',
-                    color: '#FFCA2B',
+                    marginBottom: 'clamp(12px, 1.5vh, 16px)',
+                    border: market.highlight 
+                      ? '2px solid rgba(0, 0, 0, 0.4)' 
+                      : '2px solid rgba(255, 202, 43, 0.4)',
+                    color: market.highlight ? '#000000' : '#FFCA2B',
                   }}
                 >
                   {market.icon}
@@ -236,11 +241,11 @@ const TamSlide: React.FC<TamSlideProps> = ({ onNext, onPrevious }) => {
                 <h3
                   style={{
                     fontFamily: 'Inter, var(--font-inter)',
-                    fontSize: 'clamp(22px, 2vw, 32px)',
+                    fontSize: 'clamp(19px, 1.8vw, 28px)',
                     fontWeight: 700,
-                    color: '#FFFFFF',
+                    color: market.highlight ? '#000000' : '#FFFFFF',
                     lineHeight: '1.3',
-                    marginBottom: 'clamp(8px, 1vh, 12px)',
+                    marginBottom: 'clamp(6px, 0.8vh, 10px)',
                   }}
                 >
                   {market.vertical}
@@ -248,9 +253,11 @@ const TamSlide: React.FC<TamSlideProps> = ({ onNext, onPrevious }) => {
                 <p
                   style={{
                     fontFamily: 'Apercu Pro',
-                    fontSize: 'clamp(13px, 1vw, 16px)',
+                    fontSize: 'clamp(14px, 1.15vw, 17px)',
                     fontWeight: 400,
-                    color: 'rgba(255, 255, 255, 0.6)',
+                    color: market.highlight 
+                      ? 'rgba(0, 0, 0, 0.7)' 
+                      : 'rgba(255, 255, 255, 0.6)',
                     lineHeight: '1.5',
                   }}
                 >
@@ -259,34 +266,39 @@ const TamSlide: React.FC<TamSlideProps> = ({ onNext, onPrevious }) => {
               </div>
 
               {/* Market Metrics */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(16px, 2vh, 20px)' }}>
-                {/* TAM */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(12px, 1.5vh, 16px)' }}>
+                {/* TAM with Earth Emoji */}
                 <div>
                   <div
                     style={{
                       display: 'flex',
                       justifyContent: 'space-between',
                       alignItems: 'baseline',
-                      marginBottom: '8px',
+                      marginBottom: '6px',
                     }}
                   >
                     <span
                       style={{
                         fontFamily: 'Inter, var(--font-inter)',
-                        fontSize: 'clamp(13px, 1vw, 16px)',
+                        fontSize: 'clamp(16px, 1.3vw, 20px)',
                         fontWeight: 600,
-                        color: 'rgba(255, 255, 255, 0.7)',
+                        color: market.highlight 
+                          ? 'rgba(0, 0, 0, 0.8)' 
+                          : 'rgba(255, 255, 255, 0.7)',
                         letterSpacing: '0.05em',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
                       }}
                     >
-                      TAM
+                      TAM <span style={{ fontSize: 'clamp(20px, 1.6vw, 24px)' }}>🌍</span>
                     </span>
                     <span
                       style={{
                         fontFamily: 'Inter, var(--font-inter)',
-                        fontSize: 'clamp(20px, 2vw, 28px)',
+                        fontSize: 'clamp(18px, 1.8vw, 26px)',
                         fontWeight: 700,
-                        color: '#FFCA2B',
+                        color: market.highlight ? '#000000' : '#FFCA2B',
                       }}
                     >
                       ${market.tam}B
@@ -295,9 +307,11 @@ const TamSlide: React.FC<TamSlideProps> = ({ onNext, onPrevious }) => {
                   <div
                     style={{
                       width: '100%',
-                      height: 'clamp(8px, 0.8vh, 10px)',
-                      background: 'rgba(255, 255, 255, 0.1)',
-                      borderRadius: '5px',
+                      height: 'clamp(6px, 0.7vh, 9px)',
+                      background: market.highlight 
+                        ? 'rgba(0, 0, 0, 0.2)' 
+                        : 'rgba(255, 255, 255, 0.1)',
+                      borderRadius: '4px',
                       overflow: 'hidden',
                     }}
                   >
@@ -306,40 +320,47 @@ const TamSlide: React.FC<TamSlideProps> = ({ onNext, onPrevious }) => {
                       style={{
                         width: isVisible ? '100%' : '0%',
                         height: '100%',
-                        background: 'linear-gradient(90deg, #FDE68A 0%, #FBBF24 100%)',
+                        background: market.highlight 
+                          ? 'linear-gradient(90deg, #000000 0%, #1a1a1a 100%)'
+                          : 'linear-gradient(90deg, #FDE68A 0%, #FBBF24 100%)',
                         transitionDelay: `${index * 150 + 400}ms`,
                       }}
                     />
                   </div>
                 </div>
 
-                {/* SAM */}
+                {/* SAM with USA Flag */}
                 <div>
                   <div
                     style={{
                       display: 'flex',
                       justifyContent: 'space-between',
                       alignItems: 'baseline',
-                      marginBottom: '8px',
+                      marginBottom: '6px',
                     }}
                   >
                     <span
                       style={{
                         fontFamily: 'Inter, var(--font-inter)',
-                        fontSize: 'clamp(13px, 1vw, 16px)',
+                        fontSize: 'clamp(16px, 1.3vw, 20px)',
                         fontWeight: 600,
-                        color: 'rgba(255, 255, 255, 0.7)',
+                        color: market.highlight 
+                          ? 'rgba(0, 0, 0, 0.8)' 
+                          : 'rgba(255, 255, 255, 0.7)',
                         letterSpacing: '0.05em',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
                       }}
                     >
-                      SAM
+                      SAM <span style={{ fontSize: 'clamp(20px, 1.6vw, 24px)' }}>🇺🇸</span>
                     </span>
                     <span
                       style={{
                         fontFamily: 'Inter, var(--font-inter)',
-                        fontSize: 'clamp(20px, 2vw, 28px)',
+                        fontSize: 'clamp(18px, 1.8vw, 26px)',
                         fontWeight: 700,
-                        color: '#FFCA2B',
+                        color: market.highlight ? '#000000' : '#FFCA2B',
                       }}
                     >
                       ${market.sam}B
@@ -348,9 +369,11 @@ const TamSlide: React.FC<TamSlideProps> = ({ onNext, onPrevious }) => {
                   <div
                     style={{
                       width: '100%',
-                      height: 'clamp(8px, 0.8vh, 10px)',
-                      background: 'rgba(255, 255, 255, 0.1)',
-                      borderRadius: '5px',
+                      height: 'clamp(6px, 0.7vh, 9px)',
+                      background: market.highlight 
+                        ? 'rgba(0, 0, 0, 0.2)' 
+                        : 'rgba(255, 255, 255, 0.1)',
+                      borderRadius: '4px',
                       overflow: 'hidden',
                     }}
                   >
@@ -359,7 +382,9 @@ const TamSlide: React.FC<TamSlideProps> = ({ onNext, onPrevious }) => {
                       style={{
                         width: isVisible ? `${(market.sam / market.tam) * 100}%` : '0%',
                         height: '100%',
-                        background: 'linear-gradient(90deg, #FBBF24 0%, #F59E0B 100%)',
+                        background: market.highlight 
+                          ? 'linear-gradient(90deg, #1a1a1a 0%, #333333 100%)'
+                          : 'linear-gradient(90deg, #FBBF24 0%, #F59E0B 100%)',
                         transitionDelay: `${index * 150 + 600}ms`,
                       }}
                     />
@@ -373,15 +398,17 @@ const TamSlide: React.FC<TamSlideProps> = ({ onNext, onPrevious }) => {
                       display: 'flex',
                       justifyContent: 'space-between',
                       alignItems: 'baseline',
-                      marginBottom: '8px',
+                      marginBottom: '6px',
                     }}
                   >
                     <span
                       style={{
                         fontFamily: 'Inter, var(--font-inter)',
-                        fontSize: 'clamp(13px, 1vw, 16px)',
+                        fontSize: 'clamp(16px, 1.3vw, 20px)',
                         fontWeight: 600,
-                        color: 'rgba(255, 255, 255, 0.7)',
+                        color: market.highlight 
+                          ? 'rgba(0, 0, 0, 0.8)' 
+                          : 'rgba(255, 255, 255, 0.7)',
                         letterSpacing: '0.05em',
                       }}
                     >
@@ -390,9 +417,9 @@ const TamSlide: React.FC<TamSlideProps> = ({ onNext, onPrevious }) => {
                     <span
                       style={{
                         fontFamily: 'Inter, var(--font-inter)',
-                        fontSize: 'clamp(20px, 2vw, 28px)',
+                        fontSize: 'clamp(18px, 1.8vw, 26px)',
                         fontWeight: 700,
-                        color: '#FFCA2B',
+                        color: market.highlight ? '#000000' : '#FFCA2B',
                       }}
                     >
                       ${market.som}B
@@ -401,9 +428,11 @@ const TamSlide: React.FC<TamSlideProps> = ({ onNext, onPrevious }) => {
                   <div
                     style={{
                       width: '100%',
-                      height: 'clamp(8px, 0.8vh, 10px)',
-                      background: 'rgba(255, 255, 255, 0.1)',
-                      borderRadius: '5px',
+                      height: 'clamp(6px, 0.7vh, 9px)',
+                      background: market.highlight 
+                        ? 'rgba(0, 0, 0, 0.2)' 
+                        : 'rgba(255, 255, 255, 0.1)',
+                      borderRadius: '4px',
                       overflow: 'hidden',
                     }}
                   >
@@ -412,7 +441,9 @@ const TamSlide: React.FC<TamSlideProps> = ({ onNext, onPrevious }) => {
                       style={{
                         width: isVisible ? `${(market.som / market.tam) * 100}%` : '0%',
                         height: '100%',
-                        background: '#F59E0B',
+                        background: market.highlight 
+                          ? '#333333'
+                          : '#F59E0B',
                         transitionDelay: `${index * 150 + 800}ms`,
                       }}
                     />
@@ -423,19 +454,18 @@ const TamSlide: React.FC<TamSlideProps> = ({ onNext, onPrevious }) => {
           ))}
         </div>
 
-        {/* Total Summary Bar */}
+        {/* Total Summary Bar - More Condensed */}
         <div
           className="transition-all duration-1000"
           style={{
             background: 'rgba(0, 0, 0, 0.5)',
             border: '2px solid rgba(255, 202, 43, 0.3)',
-            borderRadius: 'clamp(12px, 1.5vw, 16px)',
-            padding: 'clamp(24px, 3vh, 40px) clamp(32px, 4vw, 56px)',
+            borderRadius: 'clamp(10px, 1.2vw, 14px)',
+            padding: 'clamp(18px, 2.2vh, 32px) clamp(24px, 3vw, 44px)',
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-            gap: 'clamp(24px, 3vw, 40px)',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+            gap: 'clamp(16px, 2.5vw, 32px)',
             alignItems: 'center',
-            marginBottom: 'clamp(56px, 7vh, 80px)',
             opacity: isVisible ? 1 : 0,
             transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
             transitionDelay: '1000ms',
@@ -445,19 +475,23 @@ const TamSlide: React.FC<TamSlideProps> = ({ onNext, onPrevious }) => {
             <div
               style={{
                 fontFamily: 'Inter, var(--font-inter)',
-                fontSize: 'clamp(16px, 1.3vw, 20px)',
+                fontSize: 'clamp(16px, 1.4vw, 20px)',
                 fontWeight: 600,
                 color: 'rgba(255, 255, 255, 0.7)',
-                marginBottom: '8px',
+                marginBottom: '6px',
                 letterSpacing: '0.05em',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
               }}
             >
-              TOTAL TAM
+              TOTAL TAM <span style={{ fontSize: 'clamp(20px, 1.6vw, 24px)' }}>🌍</span>
             </div>
             <div
               style={{
                 fontFamily: 'Tobias',
-                fontSize: 'clamp(32px, 3.5vw, 48px)',
+                fontSize: 'clamp(28px, 3vw, 42px)',
                 fontWeight: 500,
                 color: '#FFCA2B',
               }}
@@ -469,7 +503,7 @@ const TamSlide: React.FC<TamSlideProps> = ({ onNext, onPrevious }) => {
           <div
             style={{
               width: '2px',
-              height: 'clamp(40px, 5vh, 60px)',
+              height: 'clamp(35px, 4vh, 50px)',
               background: 'rgba(255, 255, 255, 0.2)',
               justifySelf: 'center',
             }}
@@ -479,19 +513,23 @@ const TamSlide: React.FC<TamSlideProps> = ({ onNext, onPrevious }) => {
             <div
               style={{
                 fontFamily: 'Inter, var(--font-inter)',
-                fontSize: 'clamp(16px, 1.3vw, 20px)',
+                fontSize: 'clamp(16px, 1.4vw, 20px)',
                 fontWeight: 600,
                 color: 'rgba(255, 255, 255, 0.7)',
-                marginBottom: '8px',
+                marginBottom: '6px',
                 letterSpacing: '0.05em',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
               }}
             >
-              TOTAL SAM
+              TOTAL SAM <span style={{ fontSize: 'clamp(20px, 1.6vw, 24px)' }}>🇺🇸</span>
             </div>
             <div
               style={{
                 fontFamily: 'Tobias',
-                fontSize: 'clamp(32px, 3.5vw, 48px)',
+                fontSize: 'clamp(28px, 3vw, 42px)',
                 fontWeight: 500,
                 color: '#FFCA2B',
               }}
@@ -503,7 +541,7 @@ const TamSlide: React.FC<TamSlideProps> = ({ onNext, onPrevious }) => {
           <div
             style={{
               width: '2px',
-              height: 'clamp(40px, 5vh, 60px)',
+              height: 'clamp(35px, 4vh, 50px)',
               background: 'rgba(255, 255, 255, 0.2)',
               justifySelf: 'center',
             }}
@@ -513,10 +551,10 @@ const TamSlide: React.FC<TamSlideProps> = ({ onNext, onPrevious }) => {
             <div
               style={{
                 fontFamily: 'Inter, var(--font-inter)',
-                fontSize: 'clamp(16px, 1.3vw, 20px)',
+                fontSize: 'clamp(16px, 1.4vw, 20px)',
                 fontWeight: 600,
                 color: 'rgba(255, 255, 255, 0.7)',
-                marginBottom: '8px',
+                marginBottom: '6px',
                 letterSpacing: '0.05em',
               }}
             >
@@ -525,7 +563,7 @@ const TamSlide: React.FC<TamSlideProps> = ({ onNext, onPrevious }) => {
             <div
               style={{
                 fontFamily: 'Tobias',
-                fontSize: 'clamp(32px, 3.5vw, 48px)',
+                fontSize: 'clamp(28px, 3vw, 42px)',
                 fontWeight: 500,
                 color: '#FFCA2B',
               }}
@@ -534,142 +572,6 @@ const TamSlide: React.FC<TamSlideProps> = ({ onNext, onPrevious }) => {
             </div>
           </div>
         </div>
-
-        {/* Data Source */}
-        {/* <div
-          style={{
-            fontFamily: 'var(--font-inter)',
-            fontSize: 'clamp(12px, 1vw, 14px)',
-            color: 'rgba(255, 255, 255, 0.4)',
-            marginBottom: 'clamp(24px, 3vh, 32px)',
-            opacity: isVisible ? 1 : 0,
-            transition: 'opacity 1s',
-            transitionDelay: '1200ms',
-            fontStyle: 'italic',
-          }}
-        >
-          Data sources: Global Market Insights, Statista, Verified Market Research (2024)
-        </div> */}
-
-        {/* Sales Cycle Notes Section */}
-        {/* <div 
-          className="transition-all duration-1000"
-          style={{
-            maxWidth: '1200px',
-            margin: '0 auto',
-            opacity: isVisible ? 1 : 0,
-            transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
-            transitionDelay: '1400ms',
-          }}
-        >
-          <div
-            style={{
-              backgroundColor: 'rgba(0, 0, 0, 0.4)',
-              border: '2px solid rgba(255, 202, 43, 0.3)',
-              borderRadius: 'clamp(12px, 1.5vw, 16px)',
-              padding: 'clamp(32px, 4vh, 48px)',
-            }}
-          >
-            <h3
-              style={{
-                fontFamily: 'Inter, var(--font-inter)',
-                fontSize: 'clamp(24px, 2.2vw, 32px)',
-                fontWeight: 600,
-                color: '#FFCA2B',
-                marginBottom: 'clamp(28px, 3.5vh, 40px)',
-                letterSpacing: '0.01em',
-              }}
-            >
-              Sales Cycle Notes
-            </h3> */}
-
-            {/* <div 
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 'clamp(24px, 3vh, 32px)',
-              }}
-            > */}
-              {/* Insurance */}
-              {/* <div style={{ marginBottom: 'clamp(4px, 0.5vh, 8px)' }}>
-                <h4
-                  style={{
-                    fontFamily: 'var(--font-inter)',
-                    fontSize: 'clamp(18px, 1.5vw, 22px)',
-                    fontWeight: 600,
-                    color: '#FFFFFF',
-                    marginBottom: 'clamp(8px, 1vh, 12px)',
-                  }}
-                >
-                  Insurance
-                </h4>
-                <p
-                  style={{
-                    fontFamily: 'var(--font-inter)',
-                    fontSize: 'clamp(14px, 1.1vw, 17px)',
-                    fontWeight: 400,
-                    lineHeight: '160%',
-                    color: 'rgba(255, 255, 255, 0.85)',
-                  }}
-                >
-                  Dependent on POC resources extends - Sales cycles to 6-18 months.
-                </p>
-              </div> */}
-
-              {/* Government */}
-              {/* <div style={{ marginBottom: 'clamp(4px, 0.5vh, 8px)' }}>
-                <h4
-                  style={{
-                    fontFamily: 'var(--font-inter)',
-                    fontSize: 'clamp(18px, 1.5vw, 22px)',
-                    fontWeight: 600,
-                    color: '#FFFFFF',
-                    marginBottom: 'clamp(8px, 1vh, 12px)',
-                  }}
-                >
-                  Government
-                </h4>
-                <p
-                  style={{
-                    fontFamily: 'var(--font-inter)',
-                    fontSize: 'clamp(14px, 1.1vw, 17px)',
-                    fontWeight: 400,
-                    lineHeight: '160%',
-                    color: 'rgba(255, 255, 255, 0.85)',
-                  }}
-                >
-                  Lengthy RFP/Q processes and slow to adopt - Sales cycles of 12-24 months.
-                </p>
-              </div> */}
-
-              {/* Mobility */}
-              {/* <div>
-                <h4
-                  style={{
-                    fontFamily: 'var(--font-inter)',
-                    fontSize: 'clamp(18px, 1.5vw, 22px)',
-                    fontWeight: 600,
-                    color: '#FFFFFF',
-                    marginBottom: 'clamp(8px, 1vh, 12px)',
-                  }}
-                >
-                  Mobility
-                </h4>
-                <p
-                  style={{
-                    fontFamily: 'var(--font-inter)',
-                    fontSize: 'clamp(14px, 1.1vw, 17px)',
-                    fontWeight: 400,
-                    lineHeight: '160%',
-                    color: 'rgba(255, 255, 255, 0.85)',
-                  }}
-                >
-                  Fast moving, Tech Enabled, ICP is Data Scientist - Sales cycles are measured in weeks. Huge budgets for data.
-                </p>
-              </div>
-            </div> */}
-          {/* </div>
-        </div> */}
       </div>
     </div>
   );

@@ -6,8 +6,8 @@ import { useSlideNavigation } from '@/app/Components/SlideNavigation';
 
 export default function WhyArgusStandsAlonePage() {
   const { onNext, onPrevious } = useSlideNavigation({
-    nextSlide: '/revenue',
-    previousSlide: '/timeline',
+    nextSlide: '/traction',
+    previousSlide: '/roadmap',
   });
 
   return <CompetitorSlide onNext={onNext} onPrevious={onPrevious} />;

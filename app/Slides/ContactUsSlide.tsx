@@ -81,7 +81,7 @@ const ContactUsSlide: React.FC<ContactUsSlideProps> = ({ onNext, onPrevious }) =
           opacity: 0.6,
         }}
       >
-        12
+        15
       </div>
 
       {/* Scaling wrapper */}

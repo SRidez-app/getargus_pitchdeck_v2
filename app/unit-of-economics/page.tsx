@@ -5,8 +5,8 @@ import { useSlideNavigation } from '@/app/Components/SlideNavigation';
 
 export default function UnitEconomicsPage() {
   const { onNext, onPrevious } = useSlideNavigation({
-    nextSlide: '/team-overview',
-    previousSlide: '/revenue',
+    nextSlide: '/revenue',
+    previousSlide: '/traction',
   });
 
   return <UnitEconomicsSlide onNext={onNext} onPrevious={onPrevious} />;
